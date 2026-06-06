@@ -38,7 +38,7 @@
 
   /* --- mock local (sin backend): reproduce el guion on-voice --- */
   function mockReply(turn,key){
-    if(turn===0) return {reply:'Soy <b>Monje</b> —una persona de verdad, no un bot. Vamos al grano para no hacerte perder el tiempo. '+(openers[key]||openers._default),offerCall:false};
+    if(turn===0) return {reply:'Soy <b>Alex</b> —una persona de verdad, no un bot. Vamos al grano para no hacerte perder el tiempo. '+(openers[key]||openers._default),offerCall:false};
     if(turn===1) return {reply:second,offerCall:true};
     return {reply:'Lo apunto todo. Pero esto, hablándolo tú y yo, va mucho más rápido —reserva la llamada y lo cerramos.',offerCall:true};
   }
