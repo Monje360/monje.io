@@ -7,7 +7,7 @@
   var glow=wrap&&wrap.querySelector('.orb-glow');
   if(!wrap||!v)return;
 
-  var REST=0.55, HOT=1.55;          // velocidad del interior en reposo / al pasar por encima
+  var REST=0.28, HOT=0.78;          // velocidad del interior en reposo / al pasar por encima (~50% más lento)
   var TILT=7, GLOW=16;              // grados máx de inclinación 3D / px máx del halo
 
   // autoplay (algunos navegadores lo bloquean hasta un gesto): reintenta sin romper.
