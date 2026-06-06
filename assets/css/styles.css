@@ -1,7 +1,8 @@
   :root{
     --black:#0F0F0F;--green:#C7FF2E;--white:#FFFFFF;--charcoal:#2E2E2E;
     --gray:#808080;--bg:#FFFFFF;--field:#F1F1EF;--line:#EAEAE8;
-    --disp:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+    /* Una sola tipografía en todo: Sora. (--mono se mantiene como alias por compatibilidad) */
+    --disp:'Sora',sans-serif;--mono:'Sora',sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -21,9 +22,19 @@
   .orb-wrap{position:relative;width:380px;height:380px;margin:0 auto 14px;animation:floaty 7s ease-in-out infinite}
   .orb-wrap::after{content:"";position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:52%;height:7%;background:radial-gradient(ellipse,rgba(0,0,0,.16),transparent 70%);filter:blur(7px);z-index:-1}
   @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-  #mjGL{width:100%;height:100%;display:block;background:transparent}
+  /* Orbe = vídeo real. object-fit:cover recorta los laterales grises del clip;
+     la máscara circular funde el resto en la página blanca; la sombra la pone .orb-wrap::after. */
+  #mjOrb{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 46%;background:transparent;
+       -webkit-mask:radial-gradient(circle closest-side at 50% 46%,#000 84%,rgba(0,0,0,.4) 94%,transparent 100%);
+       mask:radial-gradient(circle closest-side at 50% 46%,#000 84%,rgba(0,0,0,.4) 94%,transparent 100%);
+       transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+  .orb-wrap:hover #mjOrb{transform:scale(1.04)}
   h1{font-weight:800;font-size:clamp(30px,4.3vw,46px);line-height:1.05;letter-spacing:-0.03em;white-space:nowrap;margin:0 auto}
   h1 .dot{color:var(--green)}h1 .io{color:var(--gray)}
+  /* "monje.io" en el título se muestra como el logo (pastilla lima), escalando con el h1 */
+  h1 .logo-h1{display:inline;font-size:1em;font-weight:800;letter-spacing:inherit}
+  h1 .logo-h1 .pill{display:inline-block;vertical-align:0.1em;font-size:0.5em;font-weight:800;letter-spacing:-0.01em;
+       padding:0.16em 0.36em 0.2em;margin-left:0.12em;border-radius:0.34em;line-height:1}
   .stage{width:min(720px,92vw);margin:30px auto 0}
   #chat{display:flex;flex-direction:column;gap:11px;margin-bottom:16px}
   .msg{max-width:80%;padding:13px 17px;border-radius:20px;font-size:15.5px;line-height:1.42;text-align:left;

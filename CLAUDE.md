@@ -31,7 +31,8 @@ Las fuentes (Sora + JetBrains Mono) se cargan desde Google Fonts por CDN → hac
 ```
 index.html                     Markup de la landing (nav · hero · chat · footer)
 assets/css/styles.css          TODO el estilo (tokens de marca como CSS vars arriba)
-assets/js/orb.js               Orbe WebGL (fragment shader fluido verde+carbón)
+assets/js/orb.js               Orbe = vídeo real (assets/video/orb.mp4): loop calmado + acelera al hover
+assets/video/orb.mp4           Vídeo de la esfera (verde+negro, fondo gris claro). Pesa ~9 MB (pendiente comprimir)
 assets/js/chat.js              Lógica del chat → llama a POST /api/chat (mock local si no hay backend)
 api/chat.js                    Endpoint del chat (Vercel) → {reply, offerCall}. Guion on-voice; LLM si hay clave
 vercel.json                    Config de Vercel (cleanUrls, cache de assets, headers)
@@ -51,8 +52,9 @@ brand/monje-marca-v2.md        Documento maestro de marca (concepto, voz, guion)
 - `--white` `#FFFFFF` · `--charcoal` `#2E2E2E` · `--gray` `#808080`
 
 **Tipografía**:
-- Display y cuerpo: **Sora** (`--disp`). El logotipo está hecho en Sora.
-- Micro-labels / mono (eyebrow, footer, status): **JetBrains Mono** (`--mono`).
+- **Una sola tipografía en TODO: Sora** (`--disp`). El logotipo está hecho en Sora.
+- (Antes había una secundaria mono —JetBrains Mono— para eyebrow/footer/status; **eliminada**.
+  El var `--mono` se mantiene como alias de Sora por compatibilidad; no reintroducir mono.)
 
 **Logotipo** = `monje` + `.io` dentro de una **pastilla lima** (componente `.logo` en CSS,
 reconstruido en vector con texto Sora, nítido y escalable). Variantes:
@@ -70,20 +72,22 @@ vectorízalos desde ahí (la copyright/propiedad del logo es del cliente).
 
 ---
 
-## El orbe (`assets/js/orb.js`)
+## El orbe (`assets/js/orb.js` + `assets/video/orb.mp4`)
 
-Esfera de "fluido" verde+carbón sobre fondo blanco, **canvas transparente** (la sombra de
-contacto la pone CSS con `.orb-wrap::after`, NO el shader → así nunca aparece un cuadrado gris).
-Reacciona al cursor (la energía se concentra hacia él vía variable `well`).
+Ahora es el **vídeo real** de la esfera (cristal con fluido verde+negro), no el shader WebGL.
+`<video id="mjOrb">` autoplay/loop/muted/playsinline en `index.html`.
 
-Mandos de ajuste dentro del fragment shader (`fs`):
-- `smoothstep(0.34,0.62,fg)` → cuánto verde.
-- `smoothstep(0.54,0.84,fd)` → cuánto carbón/negro.
-- `green*...*0.14` → glow/intensidad del verde.
-- velocidad: el multiplicador en `tt+=dt*(0.62+hov*0.7)`.
+- El clip tiene **fondo gris claro (~#EBEBED), no blanco**. Para que no se vea un cuadrado:
+  `#mjOrb` usa `object-fit:cover` (recorta los laterales grises) + una **máscara circular**
+  (`mask:radial-gradient(...)`) que funde el borde en la página. La **sombra de contacto** la
+  sigue poniendo CSS (`.orb-wrap::after`), no el vídeo.
+- **Vivo + reacción al hover** (`orb.js`): loop a velocidad calmada (`REST=0.82`) y, al pasar el
+  cursor por el `.orb-wrap`, sube `playbackRate` hacia `HOT=1.9` con rampa suave; el CSS le da
+  además un `scale(1.04)`.
+- ⚠️ El mp4 pesa ~9 MB: **pendiente comprimir** (no había ffmpeg al generarlo). Idealmente
+  recomprimir a ~1–2 MB y/o añadir un `.webm`.
 
-El fotorrealismo extremo (humo real) sería una textura/vídeo (Nano Banana / Kling); este
-shader es la versión ligera y animada en vivo.
+(El shader WebGL anterior queda en el historial de git si hiciera falta volver a la versión ligera.)
 
 ---
 
