@@ -62,6 +62,8 @@
   html.chatting #chat{flex:1;overflow-y:auto;min-height:0;margin-bottom:12px;padding:2px 2px 0}
   /* en chat: el WhatsApp SIEMPRE visible; solo se oculta el de "Fichar a Monje" */
   html.chatting .fichar-fab{display:none}
+  /* conversación iniciada (modo chat): la presencia de Alex desaparece de abajo */
+  html.chatting .presence{display:none}
   @media(max-width:560px){html.chatting .pin{padding:74px 16px 20px}html.chatting .orb-wrap{width:62px;height:62px;margin-bottom:4px}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
   /* Orbe = vídeo de la esfera: el interior es plasma verde volumétrico que se revuelve (vida 3D real,
