@@ -97,10 +97,7 @@
   /* --- iOS: el teclado encoge el viewport visible. Ajustamos la altura real (visualViewport)
      para que el chat no se rompa, y ocultamos los CTAs flotantes mientras se escribe. --- */
   var vv=window.visualViewport;
-  function setVVH(){
-    html.style.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px');
-    html.style.setProperty('--vv-top',(vv?vv.offsetTop:0)+'px');
-  }
+  function setVVH(){ html.style.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px'); }
   setVVH();
   if(vv){ vv.addEventListener('resize',setVVH); vv.addEventListener('scroll',setVVH); }
   window.addEventListener('resize',setVVH);
