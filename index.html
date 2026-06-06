@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>monje·io — Tu marca hace ruido. Monje la hace sonar.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <nav class="reveal d1">
+    <span class="logo">monje<span class="pill">.io</span></span>
+    <div class="nav-right"><button class="btn-fichar">Fichar a Monje</button></div>
+  </nav>
+  <main>
+    <div class="orb-wrap reveal d2"><canvas id="mjGL"></canvas></div>
+    <p class="eyebrow reveal d3">Especialistas en Marketing · IA · Optimización de empresas</p>
+    <h1 class="reveal d3">¿En qué quieres que te ayude monje<span class="dot">·</span><span class="io">io</span>?</h1>
+    <div class="stage reveal d4">
+      <div class="presence">
+        <span class="ava"><img src="assets/img/avatar.jpg" alt="Monje"></span>
+        <span class="who"><b>Monje</b><span>Te responde una persona, no un bot</span></span>
+        <span class="status"><span class="live"></span>en línea</span>
+      </div>
+      <div id="chat"></div>
+      <form class="composer" id="composer" autocomplete="off">
+        <input id="prompt" placeholder="Dile a Monje qué necesitas resolver…" aria-label="Escribe a Monje">
+        <button class="send" type="submit" aria-label="Enviar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+      <div class="pills" id="pills">
+        <button class="pill" data-k="atraer">Atraer</button>
+        <button class="pill" data-k="convertir">Convertir</button>
+        <button class="pill" data-k="automatizar">Automatizar</button>
+        <button class="pill" data-k="escalar">Escalar</button>
+      </div>
+      <p class="note">No es un bot ni un software: <b>detrás estoy yo, una persona</b>. Esto es solo para ir al grano, entender tu caso y ayudarte rápido —sin hacerte perder el tiempo.</p>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="logo">monje<span class="pill">.io</span></span>
+        <p>Especialistas en Marketing, IA y optimización de empresas.</p>
+        <a class="ig" href="https://www.instagram.com/monje.360/" target="_blank" rel="noopener">@monje.360 ↗</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contacto</h4>
+        <a href="tel:+34619814199">619 814 199</a>
+        <a href="mailto:info@monje360.com">info@monje360.com</a>
+        <span>Valencia · Madrid</span>
+        <span>Worldwide</span>
+      </div>
+    </div>
+    <div class="foot-cta">Consultoría inicial gratuita · si no podemos ayudarte, invitamos al café</div>
+    <div class="foot-bottom">
+      <span>© 2026 monje <span class="dot">·</span> Todos los derechos reservados</span>
+      <span>Tu marca hace ruido <span class="dot">·</span> Monje la hace sonar</span>
+    </div>
+  </footer>
+<script src="assets/js/orb.js"></script>
+<script src="assets/js/chat.js"></script>
+</body>
+</html>
