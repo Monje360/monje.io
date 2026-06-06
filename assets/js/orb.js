@@ -12,6 +12,7 @@
   var glow=wrap&&wrap.querySelector('.orb-glow');
   var hint=document.getElementById('introHint');
   var phEls=[].slice.call(document.querySelectorAll('.ph'));
+  var corners=[].slice.call(document.querySelectorAll('.corner-cta'));
   if(!hero||!v||!wrap)return;
 
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -81,6 +82,9 @@
         else if(k==='stage') setPh(el,0.74,0.90);
         else if(k==='nav') setPh(el,0.55,0.66);
       }
+      // CTAs de esquina (Contacta / WhatsApp): aparecen al final
+      var c=smooth(rng(prog,0.82,0.96));
+      for(var j=0;j<corners.length;j++){ corners[j].style.opacity=c; corners[j].style.pointerEvents = c>0.95?'auto':'none'; }
       requestAnimationFrame(frameGame);
     }
     requestAnimationFrame(frameGame);

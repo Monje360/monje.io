@@ -159,10 +159,9 @@ mock. Para probar el endpoint de verdad en local: `vercel dev` (o despliega en V
       para activar el LLM (sin ella, responde con el guion on-voice).
 - [ ] **Enlaces de reserva**: los botones "Fichar a Monje", "Reservar mi llamada" y la CTA del
       chat apuntan a `#`. Cambiar por la agenda real (Calendly / Cal.com).
-- [x] ~~**URLs de Servicios** en el footer~~ — columna "Servicios" eliminada del footer (ya no
-      hay enlaces de servicios; el footer es brand + Contacto).
-- [ ] **Copyright / razón social** del footer: ahora "© 2026 monje". Confirmar entidad legal
-      (pendiente: el cliente pasa la razón social).
+- [x] **Footer ELIMINADO** — la página es una sola pantalla limpia (sin scroll a footer). El
+      contacto vive ahora en dos CTAs flotantes de esquina: **"Contacta"** (abajo-izq, `mailto:`)
+      y **WhatsApp** (abajo-dcha, FAB → `wa.me/34619814199`). Ver `index.html` (`.corner-cta`).
 - [x] **Logo en SVG sueltos** (primaria + reversa) — generados en `assets/logo/monje-io-primaria.svg`
       y `monje-io-reversa.svg`, con Sora outlineada a trazados (sin dependencia de fuente).
 - [x] **Titular en móvil** — en <560px parte en 2 líneas a buen tamaño; en desktop/tablet sigue
@@ -175,6 +174,7 @@ mock. Para probar el endpoint de verdad en local: `vercel dev` (o despliega en V
 - Estética **minimal premium, fondo blanco**. El usuario rechazó versiones "cargadas"
   (eyebrows largos, subtítulos, grano, halos fuertes). Mantener aire.
 - Orbe **verde+carbón** (no humo plano, no canica, no contorno de energía sobre negro).
-- Footer con info **real de monje360.com**: Valencia · Madrid · Worldwide · 619 814 199 ·
-  info@monje360.com · IG @monje.360 · "consultoría inicial gratuita…". (Se filtró el relleno
-  demo de la plantilla original: nada de "Mouno", "Los Angeles", etc.)
+- **Sin footer**: la home cabe en una sola pantalla (16:9 en desktop, responsive en móvil), súper
+  limpia. El contacto son dos CTAs flotantes de esquina (Contacta = `mailto:info@monje360.com`,
+  WhatsApp = `wa.me/34619814199`). En modo gamificado aparecen al final del scroll; en móvil, siempre.
+  Datos reales de monje360.com: tel/WhatsApp 619 814 199 · info@monje360.com · IG @monje.360.
