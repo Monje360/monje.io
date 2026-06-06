@@ -120,10 +120,15 @@
   .pill{font-family:var(--disp);font-weight:500;font-size:15px;background:var(--white);border:1px solid var(--line);
        padding:10px 20px;border-radius:30px;cursor:pointer;transition:all .22s}
   .pill:hover{background:var(--black);color:#fff;border-color:var(--black);transform:translateY(-2px)}
-  /* chips con micro-descripción (2 líneas, minimalista) */
-  .pills .pill{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px 10px;border-radius:30px}
-  .pills .pill b{font-weight:600;font-size:15px;letter-spacing:-0.01em;white-space:nowrap}
-  .pills .pill span{display:none}
+  /* chips con icono + título + descripción, en fila del ancho de la barra */
+  .pills .pill{flex:1;min-width:0;display:flex;align-items:center;gap:11px;text-align:left;padding:11px 13px;border-radius:16px}
+  .pill-ic{flex:none;width:38px;height:38px;border-radius:50%;background:var(--green);display:grid;place-items:center;color:#0F0F0F;transition:transform .2s}
+  .pill-ic svg{width:20px;height:20px}
+  .pill-tx{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .pill-tx b{font-weight:600;font-size:14px;letter-spacing:-0.01em;white-space:nowrap}
+  .pill-tx span{font-size:11px;color:var(--gray);line-height:1.2}
+  .pills .pill:hover .pill-tx span{color:#cfcfcc}
+  .pills .pill:hover .pill-ic{transform:scale(1.06)}
   .cta-card{margin-top:4px;background:var(--white);border:1px solid var(--line);border-radius:22px;padding:18px 20px;
        display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;animation:pop .4s both;
        box-shadow:0 20px 50px -34px rgba(0,0,0,.4)}
@@ -173,9 +178,10 @@
     form.composer{padding:7px 7px 7px 18px}
     form.composer input{font-size:15px}
     .send{width:44px;height:44px}
-    /* chips 2×2 equilibrados */
-    .pills{gap:6px}
-    .pills .pill{padding:10px 6px}.pills .pill b{font-size:13px}
+    /* chips en móvil: 2×2 (icono + título + descripción) */
+    .pills{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .pills .pill{padding:10px 10px;gap:9px}
+    .pill-ic{width:34px;height:34px}.pill-ic svg{width:18px;height:18px}
     html.gamified .intro-hint{top:calc(50% + 128px)}
     /* móvil: dos grupos con aire — arriba orbe+características+pregunta, abajo Alex+input+chips.
        padding-bottom amplio para que la nota no choque con los CTAs flotantes */
