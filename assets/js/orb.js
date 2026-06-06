@@ -17,7 +17,7 @@
   if(!hero||!v||!wrap)return;
 
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var gamified=!reduce && window.innerWidth>760;
+  var gamified=!reduce;                 // intro por scroll también en móvil (vertical)
   var chatting=false;
 
   function clamp(x){return x<0?0:x>1?1:x;}

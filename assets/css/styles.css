@@ -153,6 +153,8 @@
   .reveal{opacity:0;transform:translateY(16px);animation:rise .8s cubic-bezier(.2,.8,.2,1) forwards}
   @keyframes rise{to{opacity:1;transform:none}}
   .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.34s}.d4{animation-delay:.5s}
-  @media(max-width:560px){nav{padding:16px}.nav-label{display:none}.orb-wrap{width:260px;height:260px}.cta-card{flex-direction:column;align-items:flex-start}
+  @media(max-width:560px){nav{padding:16px}.nav-label{display:none}.orb-wrap{width:200px;height:200px}.cta-card{flex-direction:column;align-items:flex-start}
     .nav-right{gap:8px}.btn-fichar,.btn-contacta{font-size:12px;padding:9px 13px;white-space:nowrap}.logo{font-size:21px}
-    h1{white-space:normal;font-size:clamp(27px,8.4vw,36px);line-height:1.14;max-width:14ch}}
+    h1{white-space:normal;font-size:clamp(23px,6.6vw,30px);line-height:1.16;max-width:15ch}
+    .eyebrow{margin-bottom:10px}.stage{margin:14px auto 0}.note{font-size:12px;margin-top:10px}
+    html.gamified .intro-hint{top:calc(50% + 132px)}}
