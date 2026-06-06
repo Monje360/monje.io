@@ -28,7 +28,7 @@
   function typing(){var d=document.createElement('div');d.className='typing';d.innerHTML='<span></span><span></span><span></span>';
     var row=botRow(d);chat.appendChild(row);row.scrollIntoView({behavior:'smooth',block:'nearest'});return row;}
   function showCTA(){if(ctaShown)return;ctaShown=true;var c=document.createElement('div');c.className='cta-card';
-    c.innerHTML='<div><h3>Sigamos tú y yo, 20 minutos.</h3><p>Hablas con quien va a estar en tu negocio · gratis · sin compromiso</p></div><a class="cta-btn" href="#reservar">Reservar mi llamada →</a>';
+    c.innerHTML='<div><h3>Sigamos tú y yo, 20 minutos.</h3><p>Hablas con quien va a estar en tu negocio · gratis · sin compromiso</p></div><a class="cta-btn" href="https://calendly.com/monje-io" target="_blank" rel="noopener">Reservar mi llamada →</a>';
     chat.appendChild(c);c.scrollIntoView({behavior:'smooth',block:'nearest'});}
 
   /* --- helpers --- */
