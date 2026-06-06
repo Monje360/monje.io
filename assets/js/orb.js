@@ -107,7 +107,13 @@
   window.addEventListener('orientationchange',setVVH);
   var promptEl=document.getElementById('prompt');
   if(promptEl){
-    promptEl.addEventListener('focus',function(){ html.classList.add('kb'); if(html.classList.contains('chatting')) window.scrollTo(0,0); });
+    promptEl.addEventListener('focus',function(){
+      html.classList.add('kb');
+      // en táctil (móvil/tablet): al tocar el input entramos ya al layout fijo de chat,
+      // así el teclado no descoloca la intro scrollable.
+      if((window.matchMedia('(max-width:760px)').matches || window.matchMedia('(pointer:coarse)').matches) && !html.classList.contains('chatting')) window.__monjeEnterChat();
+      if(html.classList.contains('chatting')) window.scrollTo(0,0);
+    });
     promptEl.addEventListener('blur',function(){ html.classList.remove('kb'); setVVH(); });
   }
 })();
