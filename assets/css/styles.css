@@ -60,13 +60,6 @@
   html.chatting .stage{flex:1;display:flex;flex-direction:column;min-height:0;width:min(720px,94vw);margin:4px auto 0}
   html.chatting .presence{margin-bottom:12px}
   html.chatting #chat{flex:1;overflow-y:auto;min-height:0;margin-bottom:12px;padding:2px 2px 0}
-  html.chatting .pills{margin-top:12px}
-  /* en modo chat: los 4 chips en una fila compacta JUSTO ENCIMA de la barra de texto */
-  html.chatting .pills{display:flex;gap:8px;order:1;max-width:none;margin:0 0 10px;overflow-x:auto}
-  html.chatting .pills .pill{flex:1;min-width:0;align-items:center;justify-content:center;padding:9px 8px;border-radius:30px}
-  html.chatting .pills .pill b{font-size:14px;white-space:nowrap}
-  html.chatting .pills .pill span{display:none}
-  html.chatting .composer{order:2}
   html.chatting .corner-cta{display:none}
   @media(max-width:560px){html.chatting .pin{padding:74px 16px 20px}html.chatting .orb-wrap{width:62px;height:62px;margin-bottom:4px}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
@@ -122,15 +115,15 @@
   form.composer input::placeholder{color:#9b9b97}
   .send{flex:none;width:48px;height:48px;border-radius:50%;border:none;background:var(--green);cursor:pointer;display:grid;place-items:center;transition:transform .2s}
   .send:hover{transform:scale(1.06)}.send svg{width:20px;height:20px}
-  .pills{display:grid;grid-template-columns:1fr 1fr;gap:11px;max-width:540px;margin:18px auto 0}
+  /* chips: una fila de solo títulos, del ancho de la barra, encima del input */
+  .pills{display:flex;gap:10px;margin:14px 0 10px}
   .pill{font-family:var(--disp);font-weight:500;font-size:15px;background:var(--white);border:1px solid var(--line);
        padding:10px 20px;border-radius:30px;cursor:pointer;transition:all .22s}
   .pill:hover{background:var(--black);color:#fff;border-color:var(--black);transform:translateY(-2px)}
   /* chips con micro-descripción (2 líneas, minimalista) */
-  .pills .pill{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;padding:11px 18px;border-radius:14px}
-  .pills .pill b{font-weight:600;font-size:15px;letter-spacing:-0.01em}
-  .pills .pill span{font-size:11px;color:var(--gray);font-weight:400;line-height:1.25}
-  .pills .pill:hover span{color:#bdbdba}
+  .pills .pill{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px 10px;border-radius:30px}
+  .pills .pill b{font-weight:600;font-size:15px;letter-spacing:-0.01em;white-space:nowrap}
+  .pills .pill span{display:none}
   .cta-card{margin-top:4px;background:var(--white);border:1px solid var(--line);border-radius:22px;padding:18px 20px;
        display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;animation:pop .4s both;
        box-shadow:0 20px 50px -34px rgba(0,0,0,.4)}
@@ -181,8 +174,8 @@
     form.composer input{font-size:15px}
     .send{width:44px;height:44px}
     /* chips 2×2 equilibrados */
-    .pills{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-    .pill{font-size:14px;padding:10px 12px}
+    .pills{gap:6px}
+    .pills .pill{padding:10px 6px}.pills .pill b{font-size:13px}
     html.gamified .intro-hint{top:calc(50% + 128px)}
     /* móvil: dos grupos con aire — arriba orbe+características+pregunta, abajo Alex+input+chips.
        padding-bottom amplio para que la nota no choque con los CTAs flotantes */
