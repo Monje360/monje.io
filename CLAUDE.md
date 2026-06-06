@@ -31,8 +31,9 @@ Las fuentes (Sora + JetBrains Mono) se cargan desde Google Fonts por CDN → hac
 ```
 index.html                     Markup de la landing (nav · hero · chat · footer)
 assets/css/styles.css          TODO el estilo (tokens de marca como CSS vars arriba)
-assets/js/orb.js               Orbe = imagen fija (assets/img/orb-monje.jpg): movimiento calmado por CSS + halo que sigue al cursor
-assets/img/orb-monje.jpg       Esfera con cara (sensei verde + ojos azules), fondo blanco. ~94 KB
+assets/js/orb.js               Orbe = vídeo: interior vivo + acelera y se inclina en 3D al pasar el cursor
+assets/video/orb.mp4|.webm     Vídeo de la esfera (plasma volumétrico). Recortado/comprimido: mp4 ~640 KB, webm ~1 MB
+assets/img/orb-monje.jpg       Imagen estática de la esfera. Ahora se usa como POSTER del vídeo. ~94 KB
 assets/js/chat.js              Lógica del chat → llama a POST /api/chat (mock local si no hay backend)
 api/chat.js                    Endpoint del chat (Vercel) → {reply, offerCall}. Guion on-voice; LLM si hay clave
 vercel.json                    Config de Vercel (cleanUrls, cache de assets, headers)
@@ -72,25 +73,28 @@ vectorízalos desde ahí (la copyright/propiedad del logo es del cliente).
 
 ---
 
-## El orbe (`assets/js/orb.js` + `assets/img/orb-monje.jpg`)
+## El orbe (`assets/js/orb.js` + `assets/video/orb.mp4`/`.webm`)
 
-Es una **imagen fija** de la esfera con una cara de maestro/sensei dentro (energía verde, ojos
-azules). `<img id="mjOrb">` + un `<span class="orb-glow">` (halo) en `index.html`.
+Es un **vídeo** de la esfera: el interior es **plasma verde volumétrico** que se revuelve (vida 3D
+real, no iluminación superficial) alrededor de una cara de maestro/sensei fija (ojos azules).
+`<video id="mjOrb">` (autoplay/loop/muted/playsinline, poster = `orb-monje.jpg`) + `<span class="orb-glow">`.
 
-> Decisión del cliente: el vídeo anterior **giraba demasiado** ("parecía una canica girando").
-> Se cambió a imagen fija con **movimiento calmado**. No reintroducir giro/rotación.
+> Importante sobre el "giro": el cliente rechazó un vídeo ANTERIOR porque **giraba como una canica**.
+> ESTE vídeo NO gira: la cara está anclada y solo se mueve la energía. No usar clips que roten la esfera.
 
-- **Encaje:** la imagen tiene fondo blanco; `#mjOrb` usa `object-fit:cover` + **máscara circular**
-  (`mask:radial-gradient(...)`) para fundir el borde. La **sombra de contacto** la pone CSS
-  (`.orb-wrap::after`).
-- **Vida (calmada), todo en CSS:** `floaty` (flota despacio, 9s) + `breathe` (respiración de
-  escala apenas perceptible, ±1.2%) + `glowpulse` (el halo verde late). Respeta
-  `prefers-reduced-motion`.
-- **Reacción al hover:** `orb.js` solo mueve el halo (`--gx/--gy`) un pelín hacia el cursor (máx
-  14px); el CSS sube brillo/saturación de la imagen y la opacidad del halo. Nada de rotar.
-- Imagen optimizada (~94 KB; original 6.3 MB reescalado a 1400px y JPEG q88).
+- **Encaje:** fondo blanco; `#mjOrb` usa `object-fit:cover` + **máscara circular** para fundir el
+  borde. La **sombra de contacto** la pone CSS (`.orb-wrap::after`). El vídeo viene ya recortado a
+  cuadrado y comprimido (mp4 ~640 KB / webm ~1 MB) desde el original de 12 MB.
+- **Vivo en reposo:** el vídeo reproduce a `REST=0.55` (churn lento). `floaty` (flota 9s) +
+  `glowpulse` (el halo late) siguen en CSS.
+- **Reacción al cursor (`orb.js`):** al entrar en `.orb-wrap`, el interior **acelera** hacia
+  `HOT=1.55` (rampa suave) y el orbe se **inclina en 3D** hacia el ratón (parallax,
+  `perspective + rotateX/rotateY` vía `--rx/--ry`, máx 7°); el halo deriva hacia el cursor. Al salir,
+  vuelve a reposo. Es inclinación/parallax, **no rotación de la esfera**.
+- Respeta `prefers-reduced-motion`. Para regenerar el vídeo: ffmpeg vía `imageio-ffmpeg`
+  (crop centrado a cuadrado + scale 800 + crf ~30 mp4 / crf ~36 webm).
 
-(El shader WebGL original y el orbe-vídeo intermedio quedan en el historial de git.)
+(El shader WebGL original, el orbe-vídeo intermedio y la versión imagen-fija quedan en git.)
 
 ---
 

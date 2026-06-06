@@ -19,8 +19,9 @@
   .btn-fichar:hover{transform:translateY(-2px)}
   main{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
        padding:0 24px 70px;text-align:center}
-  /* Orbe = imagen fija de la esfera con cara. Movimiento CONSTANTE pero sutil (nada de giro/canica):
-     flota + respira + halo que late + capa de energía interior que deriva; al pasar el ratón se intensifica. */
+  /* Orbe = vídeo de la esfera: el interior es plasma verde volumétrico que se revuelve (vida 3D real,
+     no iluminación superficial). La cara no gira. Al pasar el cursor el interior acelera y el orbe
+     se inclina en 3D hacia el ratón (parallax). */
   .orb-wrap{position:relative;width:380px;height:380px;margin:0 auto 14px;animation:floaty 9s ease-in-out infinite}
   .orb-wrap::after{content:"";position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:52%;height:7%;background:radial-gradient(ellipse,rgba(0,0,0,.16),transparent 70%);filter:blur(7px);z-index:-1}
   @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -30,33 +31,15 @@
        filter:blur(20px);opacity:.55;transform:translate(var(--gx,0),var(--gy,0));
        transition:opacity .6s ease,transform .5s cubic-bezier(.2,.8,.2,1);animation:glowpulse 6.5s ease-in-out infinite}
   @keyframes glowpulse{0%,100%{opacity:.45}50%{opacity:.72}}
-  /* la imagen: recorte cuadrado + máscara circular que la funde en el blanco; respiración apenas perceptible */
+  /* el vídeo: recorte cuadrado + máscara circular que lo funde en el blanco; inclinación 3D vía --rx/--ry (orb.js) */
   #mjOrb{position:relative;z-index:1;width:100%;height:100%;display:block;object-fit:cover;object-position:50% 47%;
        -webkit-mask:radial-gradient(circle closest-side at 50% 47%,#000 86%,rgba(0,0,0,.45) 95%,transparent 100%);
        mask:radial-gradient(circle closest-side at 50% 47%,#000 86%,rgba(0,0,0,.45) 95%,transparent 100%);
-       animation:breathe 7s ease-in-out infinite;transition:filter .5s ease}
-  @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.012)}}
-  /* capa de energía interior: luz verde que deriva y late despacio sobre la imagen.
-     'screen' suma luz → la energía verde de dentro parece moverse, viva, sin que la esfera gire. */
-  .orb-energy{position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;
-       background:radial-gradient(40% 44% at 42% 40%,rgba(206,255,60,.78),rgba(199,255,46,.20) 52%,transparent 70%),
-                  radial-gradient(32% 36% at 62% 62%,rgba(150,235,40,.55),transparent 68%);
-       -webkit-mask:radial-gradient(circle closest-side at 50% 47%,#000 82%,transparent 97%);
-       mask:radial-gradient(circle closest-side at 50% 47%,#000 82%,transparent 97%);
-       filter:blur(8px);opacity:.8;will-change:transform,opacity;
-       animation:energydrift 11s ease-in-out infinite,energypulse 4.5s ease-in-out infinite;transition:opacity .6s ease}
-  /* segunda bolsa de energía que deriva en sentido contrario → la luz interior "se revuelve" más */
-  .orb-energy::before{content:"";position:absolute;inset:0;border-radius:50%;mix-blend-mode:screen;
-       background:radial-gradient(30% 34% at 58% 56%,rgba(180,255,70,.6),transparent 66%);
-       animation:energydrift2 9s ease-in-out infinite}
-  @keyframes energydrift{0%{transform:translate(-7%,-5%) scale(1)}25%{transform:translate(5%,-7%) scale(1.14)}
-       50%{transform:translate(7%,5%) scale(1.05)}75%{transform:translate(-5%,7%) scale(1.14)}100%{transform:translate(-7%,-5%) scale(1)}}
-  @keyframes energydrift2{0%{transform:translate(6%,5%) scale(1.08)}50%{transform:translate(-6%,-6%) scale(1)}100%{transform:translate(6%,5%) scale(1.08)}}
-  @keyframes energypulse{0%,100%{opacity:.5}50%{opacity:1}}
-  .orb-wrap:hover #mjOrb{filter:brightness(1.08) saturate(1.12)}
+       transform:perspective(760px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:preserve-3d;
+       transition:filter .5s ease;will-change:transform,filter}
+  .orb-wrap:hover #mjOrb{filter:brightness(1.06) saturate(1.08)}
   .orb-wrap:hover .orb-glow{opacity:.9}
-  .orb-wrap:hover .orb-energy{opacity:1;animation-duration:7s,3.2s}
-  @media(prefers-reduced-motion:reduce){.orb-wrap,#mjOrb,.orb-glow,.orb-energy{animation:none}}
+  @media(prefers-reduced-motion:reduce){.orb-wrap,#mjOrb,.orb-glow{animation:none}}
   h1{font-weight:800;font-size:clamp(30px,4.3vw,46px);line-height:1.05;letter-spacing:-0.03em;white-space:nowrap;margin:0 auto}
   h1 .dot{color:var(--green)}h1 .io{color:var(--gray)}
   /* "monje.io" en el título se muestra como el logo (pastilla lima), escalando con el h1 */
