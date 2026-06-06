@@ -31,9 +31,9 @@ Las fuentes (Sora + JetBrains Mono) se cargan desde Google Fonts por CDN → hac
 ```
 index.html                     Markup de la landing (nav · hero · chat · footer)
 assets/css/styles.css          TODO el estilo (tokens de marca como CSS vars arriba)
-assets/js/orb.js               Orbe = vídeo: interior vivo + acelera y se inclina en 3D al pasar el cursor
-assets/video/orb.mp4|.webm     Vídeo de la esfera (plasma volumétrico). Recortado/comprimido: mp4 ~640 KB, webm ~1 MB
-assets/img/orb-monje.jpg       Imagen estática de la esfera. Ahora se usa como POSTER del vídeo. ~94 KB
+assets/js/orb.js               Intro gamificada por scroll (scrub del vídeo + reveal de fases) + tilt 3D del orbe
+assets/video/orb-form.mp4      Vídeo "formación": canica → cara del monje. Keyframe en cada frame (scrub fluido). ~2.1 MB
+assets/video/orb-form-poster.jpg  Primer frame (canica, sin cara) = estado inicial. ~44 KB
 assets/js/chat.js              Lógica del chat → llama a POST /api/chat (mock local si no hay backend)
 api/chat.js                    Endpoint del chat (Vercel) → {reply, offerCall}. Guion on-voice; LLM si hay clave
 vercel.json                    Config de Vercel (cleanUrls, cache de assets, headers)
@@ -73,28 +73,38 @@ vectorízalos desde ahí (la copyright/propiedad del logo es del cliente).
 
 ---
 
-## El orbe (`assets/js/orb.js` + `assets/video/orb.mp4`/`.webm`)
+## La intro gamificada por scroll (`assets/js/orb.js`)
 
-Es un **vídeo** de la esfera: el interior es **plasma verde volumétrico** que se revuelve (vida 3D
-real, no iluminación superficial) alrededor de una cara de maestro/sensei fija (ojos azules).
-`<video id="mjOrb">` (autoplay/loop/muted/playsinline, poster = `orb-monje.jpg`) + `<span class="orb-glow">`.
+La home es una **intro por scroll** (scrollytelling). Estructura: `nav` (logo fijo) + `#hero`
+(alto, `260vh` con JS) con un `.pin` **sticky 100vh** dentro. El orbe es el vídeo de "formación"
+(`orb-form.mp4`): empieza como **canica** abstracta y, al avanzar, **se forma la cara del monje**.
 
-> Importante sobre el "giro": el cliente rechazó un vídeo ANTERIOR porque **giraba como una canica**.
-> ESTE vídeo NO gira: la cara está anclada y solo se mueve la energía. No usar clips que roten la esfera.
+**Estado inicial (sin scroll):** logo arriba, orbe en su 1er frame (canica), copy **"Quiero a
+monje·io"** + flecha de scroll. Nada más (sensación de vacío).
 
-- **Encaje:** fondo blanco; `#mjOrb` usa `object-fit:cover` + **máscara circular** para fundir el
-  borde. La **sombra de contacto** la pone CSS (`.orb-wrap::after`). El vídeo viene ya recortado a
-  cuadrado y comprimido (mp4 ~640 KB / webm ~1 MB) desde el original de 12 MB.
-- **Vivo en reposo:** el vídeo reproduce a `REST=0.55` (churn lento). `floaty` (flota 9s) +
-  `glowpulse` (el halo late) siguen en CSS.
-- **Reacción al cursor (`orb.js`):** al entrar en `.orb-wrap`, el interior **acelera** hacia
-  `HOT=1.55` (rampa suave) y el orbe se **inclina en 3D** hacia el ratón (parallax,
-  `perspective + rotateX/rotateY` vía `--rx/--ry`, máx 7°); el halo deriva hacia el cursor. Al salir,
-  vuelve a reposo. Es inclinación/parallax, **no rotación de la esfera**.
-- Respeta `prefers-reduced-motion`. Para regenerar el vídeo: ffmpeg vía `imageio-ffmpeg`
-  (crop centrado a cuadrado + scale 800 + crf ~30 mp4 / crf ~36 webm).
+**Al hacer scroll** (`orb.js`, solo desktop): se calcula un progreso `p` 0→1 sobre el `#hero` y:
+- **scrub del vídeo:** `video.currentTime = p · duración` → la cara se forma con el scroll. (Por eso
+  el mp4 está recodificado con **keyframe en cada frame**: seeking fluido.)
+- **reveal por fases** (opacity + translateY): intro-hint se va (p 0–0.12), eyebrow (0.46–0.60),
+  titular (0.60–0.73), botón "Fichar" (0.55–0.66), chat/stage (0.74–0.90).
 
-(El shader WebGL original, el orbe-vídeo intermedio y la versión imagen-fija quedan en git.)
+**Activación / fallbacks:**
+- Solo gamificado si `innerWidth>760 && !prefers-reduced-motion` → `orb.js` añade `html.gamified`
+  (de ahí cuelgan el `#hero{height:260vh}`, `.pin` sticky y `.ph{opacity:0}` en el CSS).
+- **Móvil / reduced-motion:** NO hay pin/scrub; todo visible (las `.ph` no se ocultan), el vídeo va
+  en **bucle** suave (`loop`, `playbackRate 0.5`) y la cara se forma sola. El layout es el de antes.
+- Sin JS: igual que móvil (todo visible, en flujo normal). Es mejora progresiva.
+- ⚠️ `html,body{height:100%}` fijaba la altura y el `#hero` no podía crecer → con JS se libera con
+  `html.gamified,html.gamified body{height:auto}`. No volver a poner height fijo al body.
+
+**El orbe (común):** `#mjOrb` con `object-fit:cover` + **máscara circular** (funde el borde blanco);
+sombra de contacto vía `.orb-wrap::after`; `floaty` + `glowpulse` en CSS. Leve **tilt 3D** hacia el
+cursor (`perspective + rotateX/rotateY` vía `--rx/--ry`, máx 7°) + el halo le sigue.
+
+Para regenerar los vídeos: ffmpeg vía `imageio-ffmpeg` (crop centrado a cuadrado + scale 760 +
+`-x264-params keyint=1:scenecut=0` para que el scrub sea fluido).
+
+(El shader WebGL original y las versiones de orbe intermedias —vídeo churn, imagen fija— quedan en git.)
 
 ---
 

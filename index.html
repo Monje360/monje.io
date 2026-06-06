@@ -10,36 +10,42 @@
 <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-  <nav class="reveal d1">
+  <nav>
     <span class="logo">monje<span class="pill">.io</span></span>
-    <div class="nav-right"><button class="btn-fichar">Fichar a Monje</button></div>
+    <div class="nav-right ph" data-ph="nav"><button class="btn-fichar">Fichar a Monje</button></div>
   </nav>
-  <main>
-    <div class="orb-wrap reveal d2"><span class="orb-glow"></span><video id="mjOrb" poster="assets/img/orb-monje.jpg" autoplay loop muted playsinline preload="auto"><source src="assets/video/orb.mp4" type="video/mp4"><source src="assets/video/orb.webm" type="video/webm"></video></div>
-    <p class="eyebrow reveal d3">Especialistas en Marketing · IA · Optimización de empresas</p>
-    <h1 class="reveal d3">¿En qué quieres que te ayude <span class="logo logo-h1">monje<span class="pill">.io</span></span>?</h1>
-    <div class="stage reveal d4">
-      <div class="presence">
-        <span class="ava"><img src="assets/img/avatar.jpg" alt="Monje"></span>
-        <span class="who"><b>Monje</b><span>Te responde una persona, no un bot</span></span>
-        <span class="status"><span class="live"></span>en línea</span>
+  <section id="hero">
+    <div class="pin">
+      <div class="orb-wrap"><span class="orb-glow"></span><video id="mjOrb" poster="assets/video/orb-form-poster.jpg" muted playsinline preload="auto"><source src="assets/video/orb-form.mp4" type="video/mp4"></video></div>
+      <p class="eyebrow ph" data-ph="eyebrow">Especialistas en Marketing · IA · Optimización de empresas</p>
+      <h1 class="ph" data-ph="title">¿En qué quieres que te ayude <span class="logo logo-h1">monje<span class="pill">.io</span></span>?</h1>
+      <div class="stage ph" data-ph="stage">
+        <div class="presence">
+          <span class="ava"><img src="assets/img/avatar.jpg" alt="Monje"></span>
+          <span class="who"><b>Monje</b><span>Te responde una persona, no un bot</span></span>
+          <span class="status"><span class="live"></span>en línea</span>
+        </div>
+        <div id="chat"></div>
+        <form class="composer" id="composer" autocomplete="off">
+          <input id="prompt" placeholder="Dile a Monje qué necesitas resolver…" aria-label="Escribe a Monje">
+          <button class="send" type="submit" aria-label="Enviar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </form>
+        <div class="pills" id="pills">
+          <button class="pill" data-k="atraer">Atraer</button>
+          <button class="pill" data-k="convertir">Convertir</button>
+          <button class="pill" data-k="automatizar">Automatizar</button>
+          <button class="pill" data-k="escalar">Escalar</button>
+        </div>
+        <p class="note">No es un bot ni un software: <b>detrás estoy yo, una persona</b>. Esto es solo para ir al grano, entender tu caso y ayudarte rápido —sin hacerte perder el tiempo.</p>
       </div>
-      <div id="chat"></div>
-      <form class="composer" id="composer" autocomplete="off">
-        <input id="prompt" placeholder="Dile a Monje qué necesitas resolver…" aria-label="Escribe a Monje">
-        <button class="send" type="submit" aria-label="Enviar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#0F0F0F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
-      </form>
-      <div class="pills" id="pills">
-        <button class="pill" data-k="atraer">Atraer</button>
-        <button class="pill" data-k="convertir">Convertir</button>
-        <button class="pill" data-k="automatizar">Automatizar</button>
-        <button class="pill" data-k="escalar">Escalar</button>
+      <div class="intro-hint" id="introHint">
+        <span class="ihint-copy">Quiero a <span class="logo logo-ihint">monje<span class="pill">.io</span></span></span>
+        <span class="scroll-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
       </div>
-      <p class="note">No es un bot ni un software: <b>detrás estoy yo, una persona</b>. Esto es solo para ir al grano, entender tu caso y ayudarte rápido —sin hacerte perder el tiempo.</p>
     </div>
-  </main>
+  </section>
   <footer class="site-footer">
     <div class="foot-grid">
       <div class="foot-brand">

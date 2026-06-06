@@ -8,7 +8,7 @@
   html,body{height:100%}
   body{font-family:var(--disp);background:var(--bg);color:var(--black);-webkit-font-smoothing:antialiased;
        display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden}
-  nav{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:28px 40px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:28px 40px}
   .logo{font-family:var(--disp);font-weight:600;font-size:25px;letter-spacing:-0.02em;display:inline-flex;align-items:center;color:var(--black);line-height:1}
   .logo .pill{background:var(--green);color:#0F0F0F;font-weight:700;font-size:0.62em;letter-spacing:-0.005em;border-radius:0.3em;padding:0.16em 0.4em 0.2em;margin-left:0.18em;line-height:1;display:inline-flex;align-items:center}
   .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--gray);text-transform:uppercase;margin-bottom:16px}
@@ -17,8 +17,25 @@
   .btn-fichar{background:var(--black);color:#fff;border:none;font-family:var(--disp);font-weight:700;font-size:15px;
        padding:13px 22px;border-radius:40px;cursor:pointer;transition:transform .25s}
   .btn-fichar:hover{transform:translateY(-2px)}
-  main{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-       padding:0 24px 70px;text-align:center}
+  /* ===== Intro gamificada por scroll =====
+     Sin JS (o móvil): #hero en flujo normal, .pin centra el contenido como antes (todo visible).
+     Con JS (html.js, desktop): #hero alto + .pin sticky 100vh; el scroll scrubbea el orbe y revela fases. */
+  #hero{position:relative;z-index:2}
+  .pin{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+       padding:96px 24px 70px;text-align:center;min-height:100vh}
+  .intro-hint{display:none}
+  /* gamificado (lo activa orb.js añadiendo .js a <html>) */
+  html.gamified,html.gamified body{height:auto}   /* libera el height:100% para que #hero pueda crecer */
+  html.gamified #hero{flex:none;height:260vh}
+  html.gamified .pin{position:sticky;top:0;height:100vh;min-height:0;overflow:hidden;justify-content:center}
+  html.gamified .ph{opacity:0;transform:translateY(18px);will-change:opacity,transform}
+  html.gamified .intro-hint{display:flex;flex-direction:column;align-items:center;gap:14px}
+  /* intro-hint: el copy + flecha de scroll bajo el orbe en el primer pantallazo */
+  .intro-hint{position:absolute;left:50%;bottom:8vh;transform:translateX(-50%);z-index:5;pointer-events:none}
+  .ihint-copy{font-family:var(--disp);font-weight:600;font-size:clamp(18px,2.4vw,24px);color:var(--black);letter-spacing:-0.01em;display:inline-flex;align-items:center;gap:2px}
+  .scroll-arrow{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);color:var(--charcoal);animation:bob 1.6s ease-in-out infinite}
+  .scroll-arrow svg{width:18px;height:18px}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
   /* Orbe = vídeo de la esfera: el interior es plasma verde volumétrico que se revuelve (vida 3D real,
      no iluminación superficial). La cara no gira. Al pasar el cursor el interior acelera y el orbe
      se inclina en 3D hacia el ratón (parallax). */
@@ -46,6 +63,9 @@
   h1 .logo-h1{display:inline;font-size:1em;font-weight:800;letter-spacing:inherit}
   h1 .logo-h1 .pill{display:inline-block;vertical-align:0.1em;font-size:0.5em;font-weight:800;letter-spacing:-0.01em;
        padding:0.16em 0.36em 0.2em;margin-left:0.12em;border-radius:0.34em;line-height:1}
+  /* "monje.io" dentro del copy de la intro */
+  .logo-ihint{display:inline-flex;font-size:1em;font-weight:700;letter-spacing:-0.01em;vertical-align:baseline}
+  .logo-ihint .pill{font-size:0.62em;font-weight:700}
   .stage{width:min(720px,92vw);margin:30px auto 0}
   #chat{display:flex;flex-direction:column;gap:11px;margin-bottom:16px}
   .msg{max-width:80%;padding:13px 17px;border-radius:20px;font-size:15.5px;line-height:1.42;text-align:left;

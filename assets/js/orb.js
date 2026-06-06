@@ -1,47 +1,89 @@
-/* ORBE — vídeo de la esfera. El interior es plasma volumétrico (vida 3D real, no luz superficial).
-   En reposo: churn lento (vivo). Al pasar el cursor por encima: el interior ACELERA y el orbe se
-   inclina en 3D hacia el ratón (parallax). La cara no gira: solo se mueve la energía + el tilt. */
+/* ORBE + INTRO GAMIFICADA POR SCROLL
+   - Al entrar: el orbe en su 1er frame (canica), copy "Quiero a monje·io" + flecha. Nada más.
+   - Al hacer scroll (corto): el vídeo se SCRUBBEA → se forma la cara del monje, y van apareciendo
+     por fases el eyebrow, el titular y el chat.
+   - Móvil / prefers-reduced-motion: sin pin/scrub; todo visible y el orbe en bucle suave.
+   - En ambos casos: leve inclinación 3D del orbe hacia el cursor (parallax). */
 (function(){
-  var wrap=document.querySelector('.orb-wrap');
+  var html=document.documentElement;
+  var hero=document.getElementById('hero');
   var v=document.getElementById('mjOrb');
+  var wrap=document.querySelector('.orb-wrap');
   var glow=wrap&&wrap.querySelector('.orb-glow');
-  if(!wrap||!v)return;
+  var hint=document.getElementById('introHint');
+  var phEls=[].slice.call(document.querySelectorAll('.ph'));
+  if(!hero||!v||!wrap)return;
 
-  var REST=0.28, HOT=0.78;          // velocidad del interior en reposo / al pasar por encima (~50% más lento)
-  var TILT=7, GLOW=16;              // grados máx de inclinación 3D / px máx del halo
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var gamified=!reduce && window.innerWidth>760;
 
-  // autoplay (algunos navegadores lo bloquean hasta un gesto): reintenta sin romper.
-  function play(){ var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); }
-  v.addEventListener('loadeddata',play); play();
-  v.playbackRate=REST;
+  function clamp(x){return x<0?0:x>1?1:x;}
+  function rng(p,a,b){return clamp((p-a)/(b-a));}
+  function smooth(t){return t*t*(3-2*t);}
 
-  // estado actual / objetivo (se interpolan en cada frame para que todo sea suave)
-  var rate=REST,  tRate=REST;
-  var rx=0,ry=0,  trx=0,try_=0;     // rotación 3D (deg)
-  var gx=0,gy=0,  tgx=0,tgy=0;      // desplazamiento del halo (px)
+  var dur=10;
+  v.addEventListener('loadedmetadata',function(){ dur=v.duration||10; });
 
-  function move(e){
-    var r=wrap.getBoundingClientRect();
-    var nx=(e.clientX-(r.left+r.width/2))/(r.width/2);
-    var ny=(e.clientY-(r.top+r.height/2))/(r.height/2);
-    nx=Math.max(-1,Math.min(1,nx)); ny=Math.max(-1,Math.min(1,ny));
-    trx = -ny*TILT;                 // rotateX (arriba/abajo, invertido)
-    try_=  nx*TILT;                 // rotateY (izq/der)
-    tgx =  nx*GLOW; tgy = ny*GLOW;  // el halo deriva hacia el cursor
+  if(!gamified){
+    /* ---- móvil / reduced motion: todo visible, vídeo vivo en bucle ---- */
+    if(hint) hint.style.display='none';
+    v.loop=true; v.muted=true; v.playbackRate=0.5;
+    var pr=v.play&&v.play(); if(pr&&pr.catch) pr.catch(function(){});
+  } else {
+    /* ---- desktop: intro gamificada ---- */
+    html.classList.add('gamified');
+    try{ v.pause(); }catch(e){}
+
+    var prog=0;
+    function readScroll(){
+      var travel=hero.offsetHeight-window.innerHeight;
+      prog=clamp((-hero.getBoundingClientRect().top)/(travel||1));
+    }
+    window.addEventListener('scroll',readScroll,{passive:true});
+    window.addEventListener('resize',readScroll);
+    readScroll();
+
+    function setPh(el,a,b){
+      var t=smooth(rng(prog,a,b));
+      el.style.opacity=t;
+      el.style.transform='translateY('+((1-t)*18).toFixed(1)+'px)';
+      el.style.pointerEvents = t>0.95 ? 'auto' : 'none';
+    }
+    var lastT=-1;
+    function frameGame(){
+      if(v.readyState>=2){
+        var tt=prog*(dur-0.05);
+        if(Math.abs(tt-lastT)>0.008){ try{ v.currentTime=tt; }catch(e){} lastT=tt; }
+      }
+      if(hint) hint.style.opacity = 1 - smooth(rng(prog,0.0,0.12));
+      for(var i=0;i<phEls.length;i++){
+        var el=phEls[i], k=el.getAttribute('data-ph');
+        if(k==='eyebrow') setPh(el,0.46,0.60);
+        else if(k==='title') setPh(el,0.60,0.73);
+        else if(k==='stage') setPh(el,0.74,0.90);
+        else if(k==='nav') setPh(el,0.55,0.66);
+      }
+      requestAnimationFrame(frameGame);
+    }
+    requestAnimationFrame(frameGame);
   }
-  function enter(){ tRate=HOT; }
-  function leave(){ tRate=REST; trx=try_=0; tgx=tgy=0; }
-  wrap.addEventListener('mousemove',move);
-  wrap.addEventListener('mouseenter',enter);
-  wrap.addEventListener('mouseleave',leave);
 
-  function tick(){
-    rate+=(tRate-rate)*0.06; if(!v.paused) v.playbackRate=rate;
+  /* ---- inclinación 3D hacia el cursor (parallax), suave ---- */
+  var rx=0,ry=0,trx=0,try_=0,gx=0,gy=0,tgx=0,tgy=0,TILT=7,GLOW=16;
+  function c1(x){return x<-1?-1:x>1?1:x;}
+  wrap.addEventListener('mousemove',function(e){
+    var r=wrap.getBoundingClientRect();
+    var nx=c1((e.clientX-(r.left+r.width/2))/(r.width/2));
+    var ny=c1((e.clientY-(r.top+r.height/2))/(r.height/2));
+    trx=-ny*TILT; try_=nx*TILT; tgx=nx*GLOW; tgy=ny*GLOW;
+  });
+  wrap.addEventListener('mouseleave',function(){ trx=try_=0; tgx=tgy=0; });
+  function tickTilt(){
     rx+=(trx-rx)*0.1; ry+=(try_-ry)*0.1; gx+=(tgx-gx)*0.1; gy+=(tgy-gy)*0.1;
     v.style.setProperty('--rx',rx.toFixed(2)+'deg');
     v.style.setProperty('--ry',ry.toFixed(2)+'deg');
     if(glow){ glow.style.setProperty('--gx',gx.toFixed(1)+'px'); glow.style.setProperty('--gy',gy.toFixed(1)+'px'); }
-    requestAnimationFrame(tick);
+    requestAnimationFrame(tickTilt);
   }
-  requestAnimationFrame(tick);
+  requestAnimationFrame(tickTilt);
 })();
