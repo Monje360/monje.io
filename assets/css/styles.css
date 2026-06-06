@@ -31,7 +31,8 @@
   html.gamified .ph{opacity:0;transform:translateY(18px);will-change:opacity,transform}
   html.gamified .intro-hint{display:flex;flex-direction:column;align-items:center;gap:14px}
   /* intro-hint: el copy + flecha de scroll bajo el orbe en el primer pantallazo */
-  .intro-hint{position:absolute;left:50%;bottom:8vh;transform:translateX(-50%);z-index:5;pointer-events:none}
+  .hero-inner{display:flex;flex-direction:column;align-items:center;width:100%;will-change:transform}
+  .intro-hint{position:absolute;left:50%;top:calc(50% + 215px);transform:translateX(-50%);z-index:5;pointer-events:none}
   .ihint-copy{font-family:var(--disp);font-weight:600;font-size:clamp(18px,2.4vw,24px);color:var(--black);letter-spacing:-0.01em;display:inline-flex;align-items:center;gap:2px}
   .scroll-arrow{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);color:var(--charcoal);animation:bob 1.6s ease-in-out infinite}
   .scroll-arrow svg{width:18px;height:18px}

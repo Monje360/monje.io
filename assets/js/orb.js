@@ -33,6 +33,23 @@
     /* ---- desktop: intro gamificada ---- */
     html.classList.add('gamified');
     try{ v.pause(); }catch(e){}
+    // la intro debe empezar SIEMPRE arriba (evita que el navegador restaure el scroll)
+    if('scrollRestoration' in history) history.scrollRestoration='manual';
+    window.scrollTo(0,0);
+    window.addEventListener('load',function(){ window.scrollTo(0,0); });
+
+    var inner=document.querySelector('.hero-inner');
+    // delta = cuánto bajar el contenido para que el ORBE quede centrado en el 1er vistazo (p=0).
+    // Al avanzar el scroll vuelve a 0 → el grupo queda centrado (layout final).
+    var delta=0;
+    function measure(){
+      if(!inner)return;
+      inner.style.transform='none';
+      var r=wrap.getBoundingClientRect();
+      delta=(window.innerHeight/2)-(r.top+r.height/2);
+    }
+    measure();
+    window.addEventListener('load',measure);
 
     var prog=0;
     function readScroll(){
@@ -40,7 +57,7 @@
       prog=clamp((-hero.getBoundingClientRect().top)/(travel||1));
     }
     window.addEventListener('scroll',readScroll,{passive:true});
-    window.addEventListener('resize',readScroll);
+    window.addEventListener('resize',function(){ measure(); readScroll(); });
     readScroll();
 
     function setPh(el,a,b){
@@ -55,6 +72,7 @@
         var tt=prog*(dur-0.05);
         if(Math.abs(tt-lastT)>0.008){ try{ v.currentTime=tt; }catch(e){} lastT=tt; }
       }
+      if(inner) inner.style.transform='translateY('+((1-prog)*delta).toFixed(1)+'px)';
       if(hint) hint.style.opacity = 1 - smooth(rng(prog,0.0,0.12));
       for(var i=0;i<phEls.length;i++){
         var el=phEls[i], k=el.getAttribute('data-ph');
