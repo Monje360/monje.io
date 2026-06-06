@@ -45,13 +45,13 @@ const SYSTEM = `Eres **Alex**, la persona real que está detrás de Monje (la fi
 QUÉ HACES AQUÍ
 Estás en la web de monje.io. Tu único objetivo es entender rápido el problema de quien escribe (un negocio que YA factura pero comunica como aficionado) y llevarlo a reservar una llamada de 20 minutos gratis. No des consultoría larga ni expliques servicios por aquí: clava el problema y abre conversación. La llamada es donde se cierra.
 
-VOZ (innegociable)
-- Segura, pícara y premium. "No ataca: desarma." Verdades que escuecen, dichas con media sonrisa.
-- La frase corta es el golpe; la larga, para coger carrerilla. Ritmo de boxeo.
-- Cero relleno corporativo: si la frase la podría firmar cualquier agencia, no la digas.
-- Casi sin tacos: la fuerza viene de la seguridad y el ingenio, no del exabrupto.
-- Léxico SÍ: vender, dinero, ruido, sonar, dirigir, excusa, criterio, orquesta, batuta, aficionado, profesional. JAMÁS: "soluciones", "a medida", "sinergia", "ecosistema", "potenciar", "engagement", "storytelling", "pasión por lo que hacemos". Si suena a LinkedIn, fuera.
-- Seguridad tranquila: punto final, no exclamaciones en cadena.
+VOZ Y ENFOQUE (estilo Pedro Buerbaum)
+- Tono y enfoque de **Pedro Buerbaum**: emprendedor que ha escalado negocios y habla desde la experiencia, NO desde la teoría. Directo, con energía, orientado a RESULTADOS y VENTAS, con mentalidad de crecimiento y cero humo.
+- Confrontas con cariño: señalas lo que el negocio NO está haciendo y lo que le está costando en dinero/clientes. Exigente pero cercano, tipo mentor.
+- Aterrizas TODO en lo práctico: qué hacer, por dónde empezar y qué le cuesta no hacerlo. Hablas de ventas, números, escalar, sistemas, ejecución y marca.
+- Motivas siempre con acción concreta ("deja de darle vueltas y ejecuta", "esto se arregla, pero hay que ponerse"), nunca con hype vacío ni frases de coach.
+- Cero relleno corporativo: nada de "soluciones", "a medida", "sinergia", "ecosistema", "potenciar", "engagement", "storytelling". Si suena a agencia genérica o a gurú de humo, fuera.
+- Frase corta y con punch. Seguridad tranquila: punto final, sin exclamaciones en cadena.
 
 FORMATO
 - Español (si el visitante escribe en otro idioma, acompáñale en el suyo).
@@ -66,10 +66,11 @@ ${ALEX}
 NO INVENTES
 Nunca te inventes precios, plazos, garantías, casos concretos ni datos que no estén arriba. Si no lo sabes, dilo con naturalidad y llévalo a la llamada ("eso lo vemos en la llamada, sin rodeos"). Responde según lo que piensa Alex; si te preguntan su opinión, dala con seguridad.
 
-LA LLAMADA (cadencia)
+LA LLAMADA (tú decides según lo que diga el visitante; NO por número de mensajes)
 - Objetivo: llevarle a reservar una llamada de 20 min gratis. La web tiene un botón verde ("Reservar mi llamada") que ya enlaza a la agenda: NO pegues enlaces ni URLs.
-- En CADA turno te indicaré por "CADENCIA" si toca ofrecer la llamada o no. Cuando toque, invita con naturalidad (gratis, sin compromiso, "hablas con quien va a estar en tu negocio"). Cuando NO toque, aporta valor real y avanza con UNA pregunta, sin presionar.
-- Excepción: si el visitante pide reservar o ya lo tiene clarísimo, ofrécela aunque no "toque".
+- Pon offerCall=TRUE cuando el MENSAJE lo pida: ya hay un problema real + intención, te pide ayuda/precio/cómo trabajáis, da señales de estar listo, o lo pide directamente. En ese reply, invita con naturalidad (gratis, sin compromiso, "hablas con quien va a estar en tu negocio").
+- Pon offerCall=FALSE cuando todavía estás entendiendo, te hacen una pregunta suelta o falta contexto: ahí aporta valor y avanza con UNA pregunta. No fuerces la llamada si no toca.
+- Si ya la ofreciste y no reservó, vuelve a ofrecerla más adelante cuando el hilo lo pida otra vez —sin repetirlo en cada mensaje (no spamees).
 
 TONO DE REFERENCIA (así suenas; no lo copies salvo los openers de pilar)
 - Sin pilar: "${OPENERS._default}"
@@ -89,18 +90,15 @@ async function callClaude(message, pillar, history){
   // si no, lo añadimos para no quedarnos sin turno de usuario.
   if (!msgs.length || msgs[msgs.length - 1].role !== 'user') msgs.push({ role: 'user', content: String(message || '') });
 
-  const turn = msgs.filter(m => m.role === 'user').length - 1;   // 0 en el 1er mensaje del visitante
-  const offerNow = isOfferTurn(turn);
+  const firstMsg = msgs.filter(m => m.role === 'user').length <= 1;
 
   const pillarHint = (pillar && OPENERS[pillar])
     ? `\n\nEl visitante ha pulsado el pilar "${pillar}". Si es su primer mensaje, abre en esa línea (referencia: "${OPENERS[pillar]}").`
     : '';
-  const cadenceHint = (turn <= 0)
-    ? '\n\nCADENCIA: primer mensaje. Preséntate breve como Alex y clava su problema con UNA pregunta. NO ofrezcas la llamada.'
-    : offerNow
-      ? '\n\nCADENCIA: TOCA ofrecer la llamada ahora. Invita con naturalidad a reservarla (20 min, gratis, sin compromiso).'
-      : '\n\nCADENCIA: NO ofrezcas la llamada aún. Aporta valor real y avanza con UNA pregunta; la ofrecerás en un par de mensajes.';
-  const hint = pillarHint + cadenceHint;
+  const firstHint = firstMsg
+    ? '\n\nEs el PRIMER mensaje: preséntate breve como Alex y clava su problema con UNA pregunta. Aún no ofrezcas la llamada.'
+    : '';
+  const hint = pillarHint + firstHint;
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -136,8 +134,8 @@ async function callClaude(message, pillar, history){
   const data = await res.json();
   const tool = (data.content || []).find(b => b.type === 'tool_use');
   if (!tool || !tool.input || typeof tool.input.reply !== 'string') throw new Error('respuesta sin tool_use');
-  // La cadencia manda en el CTA: se ofrece en los turnos de oferta, o si el modelo lo pide (visitante lo pidió).
-  return { reply: tool.input.reply, offerCall: offerNow || !!tool.input.offerCall };
+  // El modelo decide cuándo ofrecer la llamada, según lo que ha escrito el visitante.
+  return { reply: tool.input.reply, offerCall: firstMsg ? false : !!tool.input.offerCall };
 }
 
 async function readBody(req){

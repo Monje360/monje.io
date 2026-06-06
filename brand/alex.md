@@ -16,6 +16,8 @@ Rellena cada bloque (puedes responder en bruto, ya lo pulo yo):
 - Tu historia corta (por qué montaste esto / qué te hartó del marketing tradicional):
 
 ## 2. Cómo hablas (tu voz real)
+> Tono de referencia ya configurado en el chat: **Pedro Buerbaum** (emprendedor directo, orientado a
+> resultados/ventas, mentalidad de crecimiento, sin humo). Aquí añade TUS matices para personalizarlo.
 - 3–5 frases TUYAS típicas (cómo arrancas, cómo rematas, muletillas):
 - Palabras que SÍ usas / palabras que ODIAS:
 - ¿Tuteas siempre? ¿Tacos sí/no? ¿Más serio o más gamberro?
