@@ -4,7 +4,7 @@
 (function(){
   var chat=document.getElementById('chat'),form=document.getElementById('composer'),input=document.getElementById('prompt'),pills=document.getElementById('pills');
   var ENDPOINT='/api/chat';
-  var stage=0,ctaShown=false,busy=false;
+  var stage=0,ctaCard=null,busy=false;
   var history=[];                         // [{role:'user'|'assistant',content}] — contexto para el bot real
 
   /* --- guion base = mock local (y tono base del system prompt del backend) --- */
@@ -27,20 +27,23 @@
     var node=(w==='bot')?botRow(m):m;chat.appendChild(node);node.scrollIntoView({behavior:'smooth',block:'nearest'});}
   function typing(){var d=document.createElement('div');d.className='typing';d.innerHTML='<span></span><span></span><span></span>';
     var row=botRow(d);chat.appendChild(row);row.scrollIntoView({behavior:'smooth',block:'nearest'});return row;}
-  function showCTA(){if(ctaShown)return;ctaShown=true;var c=document.createElement('div');c.className='cta-card';
-    c.innerHTML='<div><h3>Sigamos tú y yo, 20 minutos.</h3><p>Hablas con quien va a estar en tu negocio · gratis · sin compromiso</p></div><a class="cta-btn" href="https://calendly.com/monje-io" target="_blank" rel="noopener">Reservar mi llamada →</a>';
-    chat.appendChild(c);c.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  // Tarjeta de reserva. Se reutiliza: en cada nueva oferta se reposiciona al final (reaparece).
+  function showCTA(){
+    if(!ctaCard){ ctaCard=document.createElement('div');ctaCard.className='cta-card';
+      ctaCard.innerHTML='<div><h3>Sigamos tú y yo, 20 minutos.</h3><p>Hablas con quien va a estar en tu negocio · gratis · sin compromiso</p></div><a class="cta-btn" href="https://calendly.com/monje-io" target="_blank" rel="noopener">Reservar mi llamada →</a>'; }
+    chat.appendChild(ctaCard);ctaCard.scrollIntoView({behavior:'smooth',block:'nearest'});}
 
   /* --- helpers --- */
   function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function strip(s){return s.replace(/<[^>]+>/g,'');}
   function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
 
-  /* --- mock local (sin backend): reproduce el guion on-voice --- */
+  /* --- mock local (sin backend): mismo guion y MISMA cadencia que el backend --- */
+  var keep=["Te sigo. ¿Qué has probado ya que no te haya terminado de funcionar?","Vale. Y de todo esto, ¿qué es lo que más te urge resolver ahora?"];
   function mockReply(turn,key){
     if(turn===0) return {reply:'Soy <b>Alex</b> —una persona de verdad, no un bot. Vamos al grano para no hacerte perder el tiempo. '+(openers[key]||openers._default),offerCall:false};
-    if(turn===1) return {reply:second,offerCall:true};
-    return {reply:'Lo apunto todo. Pero esto, hablándolo tú y yo, va mucho más rápido —reserva la llamada y lo cerramos.',offerCall:true};
+    if(turn>=1 && (turn-1)%3===0) return {reply:second,offerCall:true};   // ofrece en 1,4,7…
+    return {reply:keep[turn%keep.length],offerCall:false};
   }
 
   /* --- pide la respuesta al endpoint real; si falla, usa el mock --- */

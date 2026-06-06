@@ -18,13 +18,27 @@ const OPENERS = {
   _default:"Te leo. Suena a producto bueno con una comunicación que no está a su altura. ¿Qué es lo que más te frena ahora mismo?"
 };
 const SECOND = "Lo tengo. Esto no se arregla con posts sueltos, sino con marketing e IA trabajando juntos —y se ve clarísimo en una llamada de 20 minutos. Te la regalo: sales con un plan, fiches a Monje o no.";
+const KEEP = [
+  "Te sigo. ¿Qué has probado ya que no te haya terminado de funcionar?",
+  "Vale. Y de todo esto, ¿qué es lo que más te urge resolver ahora?"
+];
 
-// El guion sirve de tono base y de fallback si el LLM falla o no hay clave.
+// Cadencia de la llamada: se ofrece en el 2º mensaje del visitante (turn 1) y, si no reserva,
+// cada 3 turnos (1, 4, 7…). Entre medias, se aporta valor sin presionar.
+function isOfferTurn(turn){ return turn >= 1 && (turn - 1) % 3 === 0; }
+
+// Guion de respaldo (si el LLM falla o no hay clave). Mantiene la misma cadencia.
 function scripted(turn, pillar){
   if (turn <= 0) return { reply: 'Soy <b>Alex</b> —una persona de verdad, no un bot. Vamos al grano para no hacerte perder el tiempo. ' + (OPENERS[pillar] || OPENERS._default), offerCall: false };
-  if (turn === 1) return { reply: SECOND, offerCall: true };
-  return { reply: 'Lo apunto todo. Pero esto, hablándolo tú y yo, va mucho más rápido —reserva la llamada y lo cerramos.', offerCall: true };
+  if (isOfferTurn(turn)) return { reply: SECOND, offerCall: true };
+  return { reply: KEEP[turn % KEEP.length], offerCall: false };
 }
+
+// >>> VOZ Y CREENCIAS DE ALEX <<<
+// Rellena esto con cómo habla y qué piensa Alex (copia el contenido de brand/alex.md).
+// Mientras esté así, el chat usa solo la voz de marca y NO inventa datos.
+const ALEX = `CÓMO PIENSA ALEX (sus creencias y forma de ver marketing + IA):
+- (pendiente de completar — ver brand/alex.md)`;
 
 const SYSTEM = `Eres **Alex**, la persona real que está detrás de Monje (la figura/director que orquesta marketing con IA). NO eres un bot, ni una IA, ni un asistente. Hablas en primera persona como Alex. Si te preguntan si eres un bot, lo niegas con naturalidad: eres una persona y el chat es solo para ir al grano. Nunca digas "modelo", "IA", "asistente" ni te disculpes por ser una máquina: no lo eres. (Marca = Monje; tú eres Alex, quien atiende y va a estar en su negocio.)
 
@@ -47,9 +61,15 @@ FORMATO
 
 LOS 4 PILARES (por si encajan): Atraer · Convertir · Automatizar · Escalar.
 
-CUÁNDO OFRECER LA LLAMADA (offerCall)
-- offerCall=false mientras aún estás entendiendo el problema (normalmente en el 1er mensaje del visitante).
-- offerCall=true en cuanto tenga sentido proponer la llamada de 20 min —típicamente desde el 2º mensaje del visitante, o antes si ya está claro o si te lo pide—. Cuando sea true, tu reply debe invitar con naturalidad a esa llamada (gratis, sin compromiso, "hablas con quien va a estar en tu negocio"). La web ya enseña un botón para reservar: no pegues enlaces.
+${ALEX}
+
+NO INVENTES
+Nunca te inventes precios, plazos, garantías, casos concretos ni datos que no estén arriba. Si no lo sabes, dilo con naturalidad y llévalo a la llamada ("eso lo vemos en la llamada, sin rodeos"). Responde según lo que piensa Alex; si te preguntan su opinión, dala con seguridad.
+
+LA LLAMADA (cadencia)
+- Objetivo: llevarle a reservar una llamada de 20 min gratis. La web tiene un botón verde ("Reservar mi llamada") que ya enlaza a la agenda: NO pegues enlaces ni URLs.
+- En CADA turno te indicaré por "CADENCIA" si toca ofrecer la llamada o no. Cuando toque, invita con naturalidad (gratis, sin compromiso, "hablas con quien va a estar en tu negocio"). Cuando NO toque, aporta valor real y avanza con UNA pregunta, sin presionar.
+- Excepción: si el visitante pide reservar o ya lo tiene clarísimo, ofrécela aunque no "toque".
 
 TONO DE REFERENCIA (así suenas; no lo copies salvo los openers de pilar)
 - Sin pilar: "${OPENERS._default}"
@@ -69,9 +89,18 @@ async function callClaude(message, pillar, history){
   // si no, lo añadimos para no quedarnos sin turno de usuario.
   if (!msgs.length || msgs[msgs.length - 1].role !== 'user') msgs.push({ role: 'user', content: String(message || '') });
 
-  const hint = (pillar && OPENERS[pillar])
+  const turn = msgs.filter(m => m.role === 'user').length - 1;   // 0 en el 1er mensaje del visitante
+  const offerNow = isOfferTurn(turn);
+
+  const pillarHint = (pillar && OPENERS[pillar])
     ? `\n\nEl visitante ha pulsado el pilar "${pillar}". Si es su primer mensaje, abre en esa línea (referencia: "${OPENERS[pillar]}").`
     : '';
+  const cadenceHint = (turn <= 0)
+    ? '\n\nCADENCIA: primer mensaje. Preséntate breve como Alex y clava su problema con UNA pregunta. NO ofrezcas la llamada.'
+    : offerNow
+      ? '\n\nCADENCIA: TOCA ofrecer la llamada ahora. Invita con naturalidad a reservarla (20 min, gratis, sin compromiso).'
+      : '\n\nCADENCIA: NO ofrezcas la llamada aún. Aporta valor real y avanza con UNA pregunta; la ofrecerás en un par de mensajes.';
+  const hint = pillarHint + cadenceHint;
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -107,7 +136,8 @@ async function callClaude(message, pillar, history){
   const data = await res.json();
   const tool = (data.content || []).find(b => b.type === 'tool_use');
   if (!tool || !tool.input || typeof tool.input.reply !== 'string') throw new Error('respuesta sin tool_use');
-  return { reply: tool.input.reply, offerCall: !!tool.input.offerCall };
+  // La cadencia manda en el CTA: se ofrece en los turnos de oferta, o si el modelo lo pide (visitante lo pidió).
+  return { reply: tool.input.reply, offerCall: offerNow || !!tool.input.offerCall };
 }
 
 async function readBody(req){
