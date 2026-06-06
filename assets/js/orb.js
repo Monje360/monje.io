@@ -46,8 +46,10 @@
   } else {
     html.classList.add('gamified');
     if('scrollRestoration' in history) history.scrollRestoration='manual';
-    window.scrollTo(0,0);
-    window.addEventListener('load',function(){ if(!chatting) window.scrollTo(0,0); });
+    function toTop(){ if(!chatting) window.scrollTo(0,0); }
+    toTop();
+    // el navegador puede restaurar el scroll tras recargar: forzamos arriba también tras la carga
+    window.addEventListener('load',function(){ toTop(); requestAnimationFrame(toTop); setTimeout(toTop,80); });
 
     var delta=0;
     function measure(){ if(!inner)return; inner.style.transform='none'; var r=wrap.getBoundingClientRect(); delta=(window.innerHeight/2)-(r.top+r.height/2); }
@@ -85,4 +87,11 @@
     requestAnimationFrame(tickTilt);
   }
   requestAnimationFrame(tickTilt);
+
+  /* --- tap en logo u orbe → vuelve al inicio (recarga limpia). El orbe, solo en móvil. --- */
+  function goHome(){ window.location.href='/'; }
+  var navLogo=document.querySelector('nav .logo');
+  if(navLogo){ navLogo.style.cursor='pointer'; navLogo.addEventListener('click',goHome); }
+  wrap.addEventListener('click',function(){ if(window.matchMedia('(max-width:560px)').matches) goHome(); });
 })();
+
