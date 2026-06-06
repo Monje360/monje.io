@@ -64,6 +64,8 @@
   html.chatting .fichar-fab{display:none}
   /* conversación iniciada (modo chat): la presencia de Alex desaparece de abajo */
   html.chatting .presence{display:none}
+  /* en chat: chips solo con icono + palabra (sin subtítulo) */
+  html.chatting .pill-tx span{display:none}
   /* en chat: "Contacta" pasa a botón lima fijo abajo-izquierda (espejo del WhatsApp) */
   html.chatting .btn-contacta{position:fixed;left:28px;bottom:28px;z-index:40;background:var(--green);color:#0F0F0F;border-color:var(--green);font-weight:700;padding:14px 22px;box-shadow:0 16px 34px -16px rgba(199,255,46,.85)}
   @media(max-width:560px){html.chatting .pin{padding:74px 16px 20px}html.chatting .orb-wrap{width:62px;height:62px;margin-bottom:4px}}
