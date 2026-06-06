@@ -115,10 +115,15 @@
   form.composer input::placeholder{color:#9b9b97}
   .send{flex:none;width:48px;height:48px;border-radius:50%;border:none;background:var(--green);cursor:pointer;display:grid;place-items:center;transition:transform .2s}
   .send:hover{transform:scale(1.06)}.send svg{width:20px;height:20px}
-  .pills{display:flex;flex-wrap:wrap;gap:11px;justify-content:center;margin-top:18px}
+  .pills{display:grid;grid-template-columns:1fr 1fr;gap:11px;max-width:540px;margin:18px auto 0}
   .pill{font-family:var(--disp);font-weight:500;font-size:15px;background:var(--white);border:1px solid var(--line);
        padding:10px 20px;border-radius:30px;cursor:pointer;transition:all .22s}
   .pill:hover{background:var(--black);color:#fff;border-color:var(--black);transform:translateY(-2px)}
+  /* chips con micro-descripción (2 líneas, minimalista) */
+  .pills .pill{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;padding:11px 18px;border-radius:14px}
+  .pills .pill b{font-weight:600;font-size:15px;letter-spacing:-0.01em}
+  .pills .pill span{font-size:11px;color:var(--gray);font-weight:400;line-height:1.25}
+  .pills .pill:hover span{color:#bdbdba}
   .cta-card{margin-top:4px;background:var(--white);border:1px solid var(--line);border-radius:22px;padding:18px 20px;
        display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;animation:pop .4s both;
        box-shadow:0 20px 50px -34px rgba(0,0,0,.4)}
