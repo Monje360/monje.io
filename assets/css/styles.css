@@ -12,6 +12,9 @@
   .logo{font-family:var(--disp);font-weight:600;font-size:25px;letter-spacing:-0.02em;display:inline-flex;align-items:center;color:var(--black);line-height:1}
   .logo .pill{background:var(--green);color:#0F0F0F;font-weight:700;font-size:0.62em;letter-spacing:-0.005em;border-radius:0.3em;padding:0.16em 0.4em 0.2em;margin-left:0.18em;line-height:1;display:inline-flex;align-items:center}
   .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--gray);text-transform:uppercase;margin-bottom:16px}
+  /* versión corta del eyebrow (solo móvil): palabras separadas por punto lima, estilo "en línea" */
+  .eb-short{display:none;text-align:center}
+  .eb-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin:0 9px;vertical-align:middle}
   .nav-right{display:flex;align-items:center;gap:28px}
   .nav-label{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;color:var(--gray);text-transform:uppercase}
   .btn-fichar{background:var(--black);color:#fff;border:none;font-family:var(--disp);font-weight:700;font-size:15px;
@@ -157,7 +160,7 @@
     .nav-right{gap:8px}.btn-fichar,.btn-contacta{font-size:12px;padding:9px 13px;white-space:nowrap}.logo{font-size:21px}
     /* titular en UNA línea, escalando con el ancho */
     h1{white-space:nowrap;font-size:clamp(15px,5vw,30px);line-height:1.1;max-width:none}
-    .eyebrow{margin-bottom:10px}.stage{margin:14px auto 0}.note{font-size:12px;margin-top:10px;line-height:1.45}
+    .eyebrow{margin-bottom:10px}.eb-full{display:none}.eb-short{display:block}.stage{margin:14px auto 0}.note{font-size:12px;margin-top:10px;line-height:1.45}
     /* input: texto más pequeño para que entre el placeholder */
     form.composer{padding:7px 7px 7px 18px}
     form.composer input{font-size:15px}
