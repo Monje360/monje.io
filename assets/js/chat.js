@@ -18,9 +18,15 @@
   var second="Lo tengo. Esto no se arregla con posts sueltos, sino con marketing e IA trabajando juntos —y se ve clarísimo en una llamada de 20 minutos. Te la regalo: sales con un plan, fiches a Monje o no.";
   var labels={atraer:'Quiero atraer más clientes.',convertir:'Tengo visitas pero no convierten.',automatizar:'Quiero automatizar y dejar de perder horas.',escalar:'Quiero escalar sin morir en el intento.'};
 
-  /* --- UI (INTACTA: no tocar) --- */
-  function add(t,w){var m=document.createElement('div');m.className='msg '+w;m.innerHTML=t;chat.appendChild(m);m.scrollIntoView({behavior:'smooth',block:'nearest'});}
-  function typing(){var d=document.createElement('div');d.className='typing';d.innerHTML='<span></span><span></span><span></span>';chat.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'nearest'});return d;}
+  /* --- UI --- */
+  // Mini-avatar (foto de Monje) junto a cada burbuja del bot → refuerza "hay una persona detrás".
+  function botRow(node){var r=document.createElement('div');r.className='row bot-row';
+    var a=document.createElement('span');a.className='bubble-ava';a.innerHTML='<img src="assets/img/avatar.jpg" alt="Monje">';
+    r.appendChild(a);r.appendChild(node);return r;}
+  function add(t,w){var m=document.createElement('div');m.className='msg '+w;m.innerHTML=t;
+    var node=(w==='bot')?botRow(m):m;chat.appendChild(node);node.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  function typing(){var d=document.createElement('div');d.className='typing';d.innerHTML='<span></span><span></span><span></span>';
+    var row=botRow(d);chat.appendChild(row);row.scrollIntoView({behavior:'smooth',block:'nearest'});return row;}
   function showCTA(){if(ctaShown)return;ctaShown=true;var c=document.createElement('div');c.className='cta-card';
     c.innerHTML='<div><h3>Sigamos tú y yo, 20 minutos.</h3><p>Hablas con quien va a estar en tu negocio · gratis · sin compromiso</p></div><a class="cta-btn" href="#reservar">Reservar mi llamada →</a>';
     chat.appendChild(c);c.scrollIntoView({behavior:'smooth',block:'nearest'});}
