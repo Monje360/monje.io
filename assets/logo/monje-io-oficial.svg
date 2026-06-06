@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 466.12 140.52">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c7ff2e;
+      }
+
+      .cls-2 {
+        font-size: 120px;
+        letter-spacing: -.02em;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #0f0f0f;
+        font-family: Sora-Bold, Sora;
+        font-weight: 700;
+        isolation: isolate;
+      }
+
+      .cls-3 {
+        font-size: 50.71px;
+        letter-spacing: -.02em;
+      }
+    </style>
+  </defs>
+  <text class="cls-2" transform="translate(0 103.8)"><tspan x="0" y="0">monje</tspan></text>
+  <g>
+    <rect class="cls-1" x="391.23" y="15.43" width="74.89" height="54.69" rx="8.01" ry="8.01" data-cc-id="cc-2"/>
+    <text class="cls-3" data-cc-id="cc-1" transform="translate(398.7 59.24)"><tspan x="0" y="0">.io</tspan></text>
+  </g>
+</svg>
