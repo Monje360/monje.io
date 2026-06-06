@@ -46,9 +46,9 @@
   /* ===== Modo chat (tras la 1ª respuesta): orbe pequeño arriba + conversación tipo WhatsApp =====
      Lo activa orb.js añadiendo .chatting a <html>. La página deja de scrollear; el chat scrollea dentro. */
   html.chatting{height:auto}
-  html.chatting body{overflow:hidden;height:100vh;height:100dvh}
-  html.chatting #hero{height:100vh;height:100dvh}
-  html.chatting .pin{position:static;height:100vh;height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px}
+  html.chatting body{overflow:hidden;height:100vh;height:100dvh;height:var(--vvh,100dvh)}
+  html.chatting #hero{height:100vh;height:100dvh;height:var(--vvh,100dvh)}
+  html.chatting .pin{position:static;height:100vh;height:100dvh;height:var(--vvh,100dvh);min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px}
   html.chatting .hero-inner{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;transform:none}
   html.chatting .orb-wrap{width:78px;height:78px;margin:0 auto 6px;animation:none}
   html.chatting .orb-wrap::after{display:none}
@@ -58,6 +58,9 @@
   html.chatting .presence{margin-bottom:12px}
   html.chatting #chat{flex:1;overflow-y:auto;min-height:0;margin-bottom:12px;padding:2px 2px 0}
   html.chatting .pills{margin-top:12px}
+  /* iOS: mientras se escribe (teclado abierto) ocultamos los CTAs flotantes y reducimos el hueco inferior */
+  .kb .corner-cta{display:none}
+  html.chatting.kb .pin{padding-bottom:14px}
   @media(max-width:560px){html.chatting .pin{padding:74px 16px 84px}html.chatting .orb-wrap{width:62px;height:62px;margin-bottom:4px}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
   /* Orbe = vídeo de la esfera: el interior es plasma verde volumétrico que se revuelve (vida 3D real,

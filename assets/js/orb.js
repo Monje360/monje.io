@@ -93,5 +93,19 @@
   var navLogo=document.querySelector('nav .logo');
   if(navLogo){ navLogo.style.cursor='pointer'; navLogo.addEventListener('click',goHome); }
   wrap.addEventListener('click',function(){ if(window.matchMedia('(max-width:560px)').matches) goHome(); });
+
+  /* --- iOS: el teclado encoge el viewport visible. Ajustamos la altura real (visualViewport)
+     para que el chat no se rompa, y ocultamos los CTAs flotantes mientras se escribe. --- */
+  var vv=window.visualViewport;
+  function setVVH(){ html.style.setProperty('--vvh',(vv?vv.height:window.innerHeight)+'px'); }
+  setVVH();
+  if(vv){ vv.addEventListener('resize',setVVH); vv.addEventListener('scroll',setVVH); }
+  window.addEventListener('resize',setVVH);
+  window.addEventListener('orientationchange',setVVH);
+  var promptEl=document.getElementById('prompt');
+  if(promptEl){
+    promptEl.addEventListener('focus',function(){ html.classList.add('kb'); if(html.classList.contains('chatting')) window.scrollTo(0,0); });
+    promptEl.addEventListener('blur',function(){ html.classList.remove('kb'); setVVH(); });
+  }
 })();
 
