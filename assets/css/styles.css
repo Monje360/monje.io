@@ -30,7 +30,7 @@
   /* gamificado (lo activa orb.js añadiendo .js a <html>) */
   html.gamified,html.gamified body{height:auto}   /* libera el height:100% para que #hero pueda crecer */
   html.gamified #hero{flex:none;height:260vh}
-  html.gamified .pin{position:sticky;top:0;height:100vh;min-height:0;overflow:hidden;justify-content:center}
+  html.gamified .pin{position:sticky;top:0;height:100vh;height:100dvh;min-height:0;overflow:hidden;justify-content:center}
   html.gamified .ph{opacity:0;transform:translateY(18px);will-change:opacity,transform}
   html.gamified .corner-cta{opacity:0}   /* los CTAs de esquina aparecen al final (orb.js) */
   html.gamified .intro-hint{display:flex;flex-direction:column;align-items:center;gap:14px}
@@ -43,9 +43,9 @@
   /* ===== Modo chat (tras la 1ª respuesta): orbe pequeño arriba + conversación tipo WhatsApp =====
      Lo activa orb.js añadiendo .chatting a <html>. La página deja de scrollear; el chat scrollea dentro. */
   html.chatting{height:auto}
-  html.chatting body{overflow:hidden;height:100vh}
-  html.chatting #hero{height:100vh}
-  html.chatting .pin{position:static;height:100vh;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px}
+  html.chatting body{overflow:hidden;height:100vh;height:100dvh}
+  html.chatting #hero{height:100vh;height:100dvh}
+  html.chatting .pin{position:static;height:100vh;height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px}
   html.chatting .hero-inner{height:100%;display:flex;flex-direction:column;justify-content:flex-start;transform:none}
   html.chatting .orb-wrap{width:78px;height:78px;margin:0 auto 6px;animation:none}
   html.chatting .orb-wrap::after{display:none}
@@ -153,8 +153,16 @@
   .reveal{opacity:0;transform:translateY(16px);animation:rise .8s cubic-bezier(.2,.8,.2,1) forwards}
   @keyframes rise{to{opacity:1;transform:none}}
   .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.34s}.d4{animation-delay:.5s}
-  @media(max-width:560px){nav{padding:16px}.nav-label{display:none}.orb-wrap{width:200px;height:200px}.cta-card{flex-direction:column;align-items:flex-start}
+  @media(max-width:560px){nav{padding:16px}.nav-label{display:none}.orb-wrap{width:190px;height:190px}.cta-card{flex-direction:column;align-items:flex-start}
     .nav-right{gap:8px}.btn-fichar,.btn-contacta{font-size:12px;padding:9px 13px;white-space:nowrap}.logo{font-size:21px}
-    h1{white-space:normal;font-size:clamp(23px,6.6vw,30px);line-height:1.16;max-width:15ch}
-    .eyebrow{margin-bottom:10px}.stage{margin:14px auto 0}.note{font-size:12px;margin-top:10px}
-    html.gamified .intro-hint{top:calc(50% + 132px)}}
+    /* titular en UNA línea, escalando con el ancho */
+    h1{white-space:nowrap;font-size:clamp(15px,5vw,30px);line-height:1.1;max-width:none}
+    .eyebrow{margin-bottom:10px}.stage{margin:14px auto 0}.note{font-size:12px;margin-top:10px;line-height:1.45}
+    /* input: texto más pequeño para que entre el placeholder */
+    form.composer{padding:7px 7px 7px 18px}
+    form.composer input{font-size:15px}
+    .send{width:44px;height:44px}
+    /* chips 2×2 equilibrados */
+    .pills{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .pill{font-size:14px;padding:10px 12px}
+    html.gamified .intro-hint{top:calc(50% + 128px)}}

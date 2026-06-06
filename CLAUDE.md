@@ -31,9 +31,8 @@ Las fuentes (Sora + JetBrains Mono) se cargan desde Google Fonts por CDN → hac
 ```
 index.html                     Markup de la landing (nav · hero · chat · footer)
 assets/css/styles.css          TODO el estilo (tokens de marca como CSS vars arriba)
-assets/js/orb.js               Intro gamificada por scroll (scrub del vídeo + reveal de fases) + tilt 3D del orbe
-assets/video/orb-form.mp4      Vídeo "formación": canica → cara del monje. Keyframe en cada frame (scrub fluido). ~2.1 MB
-assets/video/orb-form-poster.jpg  Primer frame (canica, sin cara) = estado inicial. ~44 KB
+assets/js/orb.js               Intro gamificada por scroll (img-swap de la secuencia + reveal de fases) + tilt 3D
+assets/orb-seq/f-01..36.jpg    Secuencia "formación": canica → cara del monje (36 frames, 760px, ~1.6 MB)
 assets/js/chat.js              Lógica del chat → llama a POST /api/chat (mock local si no hay backend)
 api/chat.js                    Endpoint del chat (Vercel) → {reply, offerCall}. Guion on-voice; LLM si hay clave
 vercel.json                    Config de Vercel (cleanUrls, cache de assets, headers)
@@ -82,20 +81,20 @@ La home es una **intro por scroll** (scrollytelling). Estructura: `nav` (logo fi
 **Estado inicial (sin scroll):** logo arriba, orbe en su 1er frame (canica), copy **"Quiero a
 monje·io"** + flecha de scroll. Nada más (sensación de vacío).
 
-**Al hacer scroll** (`orb.js`, solo desktop): se calcula un progreso `p` 0→1 sobre el `#hero` y:
-- **scrub del vídeo:** `video.currentTime = p · duración` → la cara se forma con el scroll. (Por eso
-  el mp4 está recodificado con **keyframe en cada frame**: seeking fluido.)
+**Al hacer scroll** (`orb.js`, desktop Y móvil): se calcula un progreso `p` 0→1 sobre el `#hero` y:
+- **img-swap de la secuencia:** `orb.src = frames[round(p·35)]` → la cara se forma con el scroll.
+  ⚠️ Es una **secuencia de imágenes** (no vídeo) a propósito: el *scrub* de vídeo **no funciona en
+  iOS Safari** (no repinta el frame al hacer seek). El img-swap sí.
 - **reveal por fases** (opacity + translateY): intro-hint se va (p 0–0.12), eyebrow (0.46–0.60),
   titular (0.60–0.73), botón "Fichar" (0.55–0.66), chat/stage (0.74–0.90).
 
 **Activación / fallbacks:**
-- Solo gamificado si `innerWidth>760 && !prefers-reduced-motion` → `orb.js` añade `html.gamified`
-  (de ahí cuelgan el `#hero{height:260vh}`, `.pin` sticky y `.ph{opacity:0}` en el CSS).
-- **Móvil / reduced-motion:** NO hay pin/scrub; todo visible (las `.ph` no se ocultan), el vídeo va
-  en **bucle** suave (`loop`, `playbackRate 0.5`) y la cara se forma sola. El layout es el de antes.
-- Sin JS: igual que móvil (todo visible, en flujo normal). Es mejora progresiva.
+- Gamificado si `!prefers-reduced-motion` (también en móvil) → `orb.js` añade `html.gamified`
+  (de ahí cuelgan `#hero{height:260vh}`, `.pin` sticky `100dvh` y `.ph{opacity:0}` en el CSS).
+- **reduced-motion / sin JS:** todo visible, cara ya formada (último frame). Mejora progresiva.
 - ⚠️ `html,body{height:100%}` fijaba la altura y el `#hero` no podía crecer → con JS se libera con
   `html.gamified,html.gamified body{height:auto}`. No volver a poner height fijo al body.
+- ⚠️ Pin a `100dvh` (no `100vh`) para que la barra de Safari iOS no descuadre la pantalla.
 
 **El orbe (común):** `#mjOrb` con `object-fit:cover` + **máscara circular** (funde el borde blanco);
 sombra de contacto vía `.orb-wrap::after`; `floaty` + `glowpulse` en CSS. Leve **tilt 3D** hacia el
