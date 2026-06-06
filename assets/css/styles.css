@@ -51,7 +51,7 @@
   html.chatting{height:100%}
   html.chatting body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden;height:100vh;height:100dvh;height:var(--vvh,100dvh)}
   html.chatting #hero{height:100%}
-  html.chatting .pin{position:absolute;top:0;left:0;right:0;bottom:0;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 150px 24px;z-index:5}
+  html.chatting .pin{position:absolute;top:0;left:0;right:0;bottom:0;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 96px 24px;z-index:5}
   html.chatting .hero-inner{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;transform:none}
   html.chatting .orb-wrap{width:78px;height:78px;margin:0 auto 6px;animation:none}
   html.chatting .orb-wrap::after{display:none}
@@ -64,10 +64,13 @@
   html.chatting .fichar-fab{display:none}
   /* conversación iniciada (modo chat): la presencia de Alex desaparece de abajo */
   html.chatting .presence{display:none}
-  /* en chat: chips solo con icono + palabra (sin subtítulo) */
+  /* en chat: chips solo con icono + palabra (sin subtítulo), más pequeños y con lima translúcida */
   html.chatting .pill-tx span{display:none}
-  /* en chat: "Contacta" pasa a botón lima fijo abajo-izquierda (espejo del WhatsApp) */
-  html.chatting .btn-contacta{position:fixed;left:28px;bottom:28px;z-index:40;background:var(--green);color:#0F0F0F;border-color:var(--green);font-weight:700;padding:14px 22px;box-shadow:0 16px 34px -16px rgba(199,255,46,.85)}
+  html.chatting .pills{gap:8px;justify-content:center;flex-wrap:wrap}
+  html.chatting .pills .pill{flex:0 0 auto;padding:7px 14px 7px 8px;border-radius:30px;gap:8px}
+  html.chatting .pill-ic{width:28px;height:28px;background:rgba(199,255,46,.22)}
+  html.chatting .pill-ic svg{width:15px;height:15px}
+  html.chatting .pill-tx b{font-size:13px}
   @media(max-width:560px){html.chatting .pin{padding:74px 16px 20px}html.chatting .orb-wrap{width:62px;height:62px;margin-bottom:4px}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
   /* Orbe = vídeo de la esfera: el interior es plasma verde volumétrico que se revuelve (vida 3D real,
