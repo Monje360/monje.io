@@ -46,10 +46,12 @@
   .scroll-arrow svg{width:18px;height:18px}
   /* ===== Modo chat (tras la 1ª respuesta): orbe pequeño arriba + conversación tipo WhatsApp =====
      Lo activa orb.js añadiendo .chatting a <html>. La página deja de scrollear; el chat scrollea dentro. */
-  html.chatting{height:auto}
-  html.chatting body{overflow:hidden;height:100vh;height:100dvh;height:var(--vvh,100dvh)}
-  html.chatting #hero{height:100vh;height:100dvh;height:var(--vvh,100dvh)}
-  html.chatting .pin{position:fixed;top:0;left:0;right:0;height:100vh;height:100dvh;height:var(--vvh,100dvh);min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px;z-index:5}
+  /* Body BLOQUEADO (position:fixed) → iOS no puede scrollear/saltar nada con el teclado.
+     La altura la marca el área visible (--vvh, visualViewport). El chat rellena ese área. */
+  html.chatting{height:100%}
+  html.chatting body{position:fixed;top:0;left:0;right:0;width:100%;overflow:hidden;height:100vh;height:100dvh;height:var(--vvh,100dvh)}
+  html.chatting #hero{height:100%}
+  html.chatting .pin{position:absolute;top:0;left:0;right:0;bottom:0;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px;z-index:5}
   html.chatting .hero-inner{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;transform:none}
   html.chatting .orb-wrap{width:78px;height:78px;margin:0 auto 6px;animation:none}
   html.chatting .orb-wrap::after{display:none}
