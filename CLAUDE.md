@@ -31,8 +31,8 @@ Las fuentes (Sora + JetBrains Mono) se cargan desde Google Fonts por CDN → hac
 ```
 index.html                     Markup de la landing (nav · hero · chat · footer)
 assets/css/styles.css          TODO el estilo (tokens de marca como CSS vars arriba)
-assets/js/orb.js               Orbe = vídeo real (assets/video/orb.mp4): loop calmado + acelera al hover
-assets/video/orb.mp4           Vídeo de la esfera (verde+negro, fondo gris claro). Pesa ~9 MB (pendiente comprimir)
+assets/js/orb.js               Orbe = imagen fija (assets/img/orb-monje.jpg): movimiento calmado por CSS + halo que sigue al cursor
+assets/img/orb-monje.jpg       Esfera con cara (sensei verde + ojos azules), fondo blanco. ~94 KB
 assets/js/chat.js              Lógica del chat → llama a POST /api/chat (mock local si no hay backend)
 api/chat.js                    Endpoint del chat (Vercel) → {reply, offerCall}. Guion on-voice; LLM si hay clave
 vercel.json                    Config de Vercel (cleanUrls, cache de assets, headers)
@@ -72,22 +72,25 @@ vectorízalos desde ahí (la copyright/propiedad del logo es del cliente).
 
 ---
 
-## El orbe (`assets/js/orb.js` + `assets/video/orb.mp4`)
+## El orbe (`assets/js/orb.js` + `assets/img/orb-monje.jpg`)
 
-Ahora es el **vídeo real** de la esfera (cristal con fluido verde+negro), no el shader WebGL.
-`<video id="mjOrb">` autoplay/loop/muted/playsinline en `index.html`.
+Es una **imagen fija** de la esfera con una cara de maestro/sensei dentro (energía verde, ojos
+azules). `<img id="mjOrb">` + un `<span class="orb-glow">` (halo) en `index.html`.
 
-- El clip tiene **fondo gris claro (~#EBEBED), no blanco**. Para que no se vea un cuadrado:
-  `#mjOrb` usa `object-fit:cover` (recorta los laterales grises) + una **máscara circular**
-  (`mask:radial-gradient(...)`) que funde el borde en la página. La **sombra de contacto** la
-  sigue poniendo CSS (`.orb-wrap::after`), no el vídeo.
-- **Vivo + reacción al hover** (`orb.js`): loop a velocidad calmada (`REST=0.82`) y, al pasar el
-  cursor por el `.orb-wrap`, sube `playbackRate` hacia `HOT=1.9` con rampa suave; el CSS le da
-  además un `scale(1.04)`.
-- ⚠️ El mp4 pesa ~9 MB: **pendiente comprimir** (no había ffmpeg al generarlo). Idealmente
-  recomprimir a ~1–2 MB y/o añadir un `.webm`.
+> Decisión del cliente: el vídeo anterior **giraba demasiado** ("parecía una canica girando").
+> Se cambió a imagen fija con **movimiento calmado**. No reintroducir giro/rotación.
 
-(El shader WebGL anterior queda en el historial de git si hiciera falta volver a la versión ligera.)
+- **Encaje:** la imagen tiene fondo blanco; `#mjOrb` usa `object-fit:cover` + **máscara circular**
+  (`mask:radial-gradient(...)`) para fundir el borde. La **sombra de contacto** la pone CSS
+  (`.orb-wrap::after`).
+- **Vida (calmada), todo en CSS:** `floaty` (flota despacio, 9s) + `breathe` (respiración de
+  escala apenas perceptible, ±1.2%) + `glowpulse` (el halo verde late). Respeta
+  `prefers-reduced-motion`.
+- **Reacción al hover:** `orb.js` solo mueve el halo (`--gx/--gy`) un pelín hacia el cursor (máx
+  14px); el CSS sube brillo/saturación de la imagen y la opacidad del halo. Nada de rotar.
+- Imagen optimizada (~94 KB; original 6.3 MB reescalado a 1400px y JPEG q88).
+
+(El shader WebGL original y el orbe-vídeo intermedio quedan en el historial de git.)
 
 ---
 

@@ -19,16 +19,26 @@
   .btn-fichar:hover{transform:translateY(-2px)}
   main{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
        padding:0 24px 70px;text-align:center}
-  .orb-wrap{position:relative;width:380px;height:380px;margin:0 auto 14px;animation:floaty 7s ease-in-out infinite}
+  /* Orbe = imagen fija de la esfera con cara. Movimiento CALMADO (nada de giro/canica):
+     flotación lenta + respiración muy sutil + halo verde que late; al pasar por encima reacciona suave. */
+  .orb-wrap{position:relative;width:380px;height:380px;margin:0 auto 14px;animation:floaty 9s ease-in-out infinite}
   .orb-wrap::after{content:"";position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:52%;height:7%;background:radial-gradient(ellipse,rgba(0,0,0,.16),transparent 70%);filter:blur(7px);z-index:-1}
-  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-  /* Orbe = vídeo real. object-fit:cover recorta los laterales grises del clip;
-     la máscara circular funde el resto en la página blanca; la sombra la pone .orb-wrap::after. */
-  #mjOrb{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 46%;background:transparent;
-       -webkit-mask:radial-gradient(circle closest-side at 50% 46%,#000 84%,rgba(0,0,0,.4) 94%,transparent 100%);
-       mask:radial-gradient(circle closest-side at 50% 46%,#000 84%,rgba(0,0,0,.4) 94%,transparent 100%);
-       transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-  .orb-wrap:hover #mjOrb{transform:scale(1.04)}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  /* halo de energía detrás del orbe: late despacio y, vía --gx/--gy (orb.js), deriva un pelín hacia el cursor */
+  .orb-glow{position:absolute;inset:-6%;z-index:0;border-radius:50%;pointer-events:none;
+       background:radial-gradient(circle at 50% 50%,rgba(199,255,46,.42),rgba(199,255,46,.10) 45%,transparent 68%);
+       filter:blur(20px);opacity:.55;transform:translate(var(--gx,0),var(--gy,0));
+       transition:opacity .6s ease,transform .5s cubic-bezier(.2,.8,.2,1);animation:glowpulse 6.5s ease-in-out infinite}
+  @keyframes glowpulse{0%,100%{opacity:.45}50%{opacity:.72}}
+  /* la imagen: recorte cuadrado + máscara circular que la funde en el blanco; respiración apenas perceptible */
+  #mjOrb{position:relative;z-index:1;width:100%;height:100%;display:block;object-fit:cover;object-position:50% 47%;
+       -webkit-mask:radial-gradient(circle closest-side at 50% 47%,#000 86%,rgba(0,0,0,.45) 95%,transparent 100%);
+       mask:radial-gradient(circle closest-side at 50% 47%,#000 86%,rgba(0,0,0,.45) 95%,transparent 100%);
+       animation:breathe 7s ease-in-out infinite;transition:filter .5s ease}
+  @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.012)}}
+  .orb-wrap:hover #mjOrb{filter:brightness(1.06) saturate(1.07)}
+  .orb-wrap:hover .orb-glow{opacity:.85}
+  @media(prefers-reduced-motion:reduce){.orb-wrap,#mjOrb,.orb-glow{animation:none}}
   h1{font-weight:800;font-size:clamp(30px,4.3vw,46px);line-height:1.05;letter-spacing:-0.03em;white-space:nowrap;margin:0 auto}
   h1 .dot{color:var(--green)}h1 .io{color:var(--gray)}
   /* "monje.io" en el título se muestra como el logo (pastilla lima), escalando con el h1 */
