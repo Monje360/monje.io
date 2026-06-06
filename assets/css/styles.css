@@ -39,6 +39,7 @@
   html.gamified .intro-hint{display:flex;flex-direction:column;align-items:center;gap:14px}
   /* intro-hint: el copy + flecha de scroll bajo el orbe en el primer pantallazo */
   .hero-inner{display:flex;flex-direction:column;align-items:center;width:100%;will-change:transform}
+  .hero-top{display:flex;flex-direction:column;align-items:center;width:100%}
   .intro-hint{position:absolute;left:50%;top:calc(50% + 215px);transform:translateX(-50%);z-index:5;pointer-events:none}
   .ihint-copy{font-family:var(--disp);font-weight:600;font-size:clamp(18px,2.4vw,24px);color:var(--black);letter-spacing:-0.01em;display:inline-flex;align-items:center;gap:2px}
   .scroll-arrow{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:none;background:var(--green);color:#0F0F0F;box-shadow:0 12px 26px -14px rgba(199,255,46,.85);animation:bob 1.6s ease-in-out infinite}
@@ -48,7 +49,7 @@
   html.chatting{height:auto}
   html.chatting body{overflow:hidden;height:100vh;height:100dvh;height:var(--vvh,100dvh)}
   html.chatting #hero{height:100vh;height:100dvh;height:var(--vvh,100dvh)}
-  html.chatting .pin{position:static;height:100vh;height:100dvh;height:var(--vvh,100dvh);min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px}
+  html.chatting .pin{position:fixed;top:var(--vv-top,0px);left:0;right:0;height:100vh;height:100dvh;height:var(--vvh,100dvh);min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:78px 24px 100px;z-index:5}
   html.chatting .hero-inner{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;transform:none}
   html.chatting .orb-wrap{width:78px;height:78px;margin:0 auto 6px;animation:none}
   html.chatting .orb-wrap::after{display:none}
@@ -176,4 +177,9 @@
     /* chips 2×2 equilibrados */
     .pills{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
     .pill{font-size:14px;padding:10px 12px}
-    html.gamified .intro-hint{top:calc(50% + 128px)}}
+    html.gamified .intro-hint{top:calc(50% + 128px)}
+    /* móvil: dos grupos con aire — arriba orbe+características+pregunta, abajo Alex+input+chips.
+       padding-bottom amplio para que la nota no choque con los CTAs flotantes */
+    html.gamified .pin{padding:64px 16px 84px}
+    html.gamified .hero-inner{flex:1 1 auto;min-height:0;justify-content:space-between}
+    .hero-top{gap:6px}}
