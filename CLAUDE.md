@@ -140,13 +140,14 @@ mock. Para probar el endpoint de verdad en local: `vercel dev` (o despliega en V
       chat apuntan a `#`. Cambiar por la agenda real (Calendly / Cal.com).
 - [x] ~~**URLs de Servicios** en el footer~~ — columna "Servicios" eliminada del footer (ya no
       hay enlaces de servicios; el footer es brand + Contacto).
-- [ ] **Copyright / razón social** del footer: ahora "© 2026 monje". Confirmar entidad legal.
-- [ ] **Logo en SVG sueltos** (primaria + reversa) si el dev los necesita fuera de la web
-      (vectorizar desde `assets/logo/source/`). El logo en la web ya es vector vía CSS.
-- [ ] **Titular en móvil**: ahora está forzado a 1 línea (`white-space:nowrap` + tamaño por vw),
-      así que en pantallas muy estrechas se hace pequeño. Decisión pendiente: permitir 2 líneas
-      solo en móvil.
-- [ ] (Opcional) mini-avatar (foto) junto a cada burbuja del bot y nombre real bajo "Monje".
+- [ ] **Copyright / razón social** del footer: ahora "© 2026 monje". Confirmar entidad legal
+      (pendiente: el cliente pasa la razón social).
+- [x] **Logo en SVG sueltos** (primaria + reversa) — generados en `assets/logo/monje-io-primaria.svg`
+      y `monje-io-reversa.svg`, con Sora outlineada a trazados (sin dependencia de fuente).
+- [x] **Titular en móvil** — en <560px parte en 2 líneas a buen tamaño; en desktop/tablet sigue
+      en 1 línea (`white-space:nowrap`). Resuelto en `styles.css`.
+- [x] (Opcional) mini-avatar (foto) junto a cada burbuja del bot — implementado (`.bot-row` en
+      `chat.js`/`styles.css`). El nombre por burbuja se descartó por mantener el aire (ya está en el chip).
 - [ ] Páginas legales (Aviso legal / Privacidad / Cookies) si se publica.
 
 ## Decisiones ya tomadas (no deshacer sin querer)
