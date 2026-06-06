@@ -101,6 +101,12 @@ monje·io"** + flecha de scroll. Nada más (sensación de vacío).
 sombra de contacto vía `.orb-wrap::after`; `floaty` + `glowpulse` en CSS. Leve **tilt 3D** hacia el
 cursor (`perspective + rotateX/rotateY` vía `--rx/--ry`, máx 7°) + el halo le sigue.
 
+**Modo chat (tras la 1ª respuesta de Monje):** `chat.js` llama a `window.__monjeEnterChat()` (en
+`orb.js`). Quita `gamified`, limpia los estilos inline del scroll-intro y añade `html.chatting`:
+el orbe se **encoge y sube** (cabecera ~78px), el eyebrow/título se ocultan y la conversación pasa
+a ocupar la pantalla tipo **WhatsApp** (`#chat` con scroll propio, composer abajo, sin scroll de
+página). Los CTAs de esquina se ocultan; "Contacta" del nav se mantiene. Ver `html.chatting` en CSS.
+
 Para regenerar los vídeos: ffmpeg vía `imageio-ffmpeg` (crop centrado a cuadrado + scale 760 +
 `-x264-params keyint=1:scenecut=0` para que el scrub sea fluido).
 

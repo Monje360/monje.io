@@ -11,12 +11,14 @@
   var wrap=document.querySelector('.orb-wrap');
   var glow=wrap&&wrap.querySelector('.orb-glow');
   var hint=document.getElementById('introHint');
+  var inner=document.querySelector('.hero-inner');
   var phEls=[].slice.call(document.querySelectorAll('.ph'));
   var corners=[].slice.call(document.querySelectorAll('.corner-cta'));
   if(!hero||!v||!wrap)return;
 
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
   var gamified=!reduce && window.innerWidth>760;
+  var chatting=false;
 
   function clamp(x){return x<0?0:x>1?1:x;}
   function rng(p,a,b){return clamp((p-a)/(b-a));}
@@ -24,6 +26,18 @@
 
   var dur=10;
   v.addEventListener('loadedmetadata',function(){ dur=v.duration||10; });
+
+  /* ---- Modo chat: lo llama chat.js tras la 1ª respuesta de Monje.
+     El orbe se encoge y sube, el título se recoge y la conversación ocupa la pantalla (tipo WhatsApp).
+     Detiene el scroll-intro y limpia los estilos inline que dejó. ---- */
+  window.__monjeEnterChat=function(){
+    if(chatting)return; chatting=true;
+    phEls.concat(corners,[inner,hint]).forEach(function(el){ if(el){ el.style.opacity=''; el.style.transform=''; el.style.pointerEvents=''; } });
+    html.classList.remove('gamified');
+    html.classList.add('chatting');
+    window.scrollTo(0,0);
+    v.loop=true; v.playbackRate=0.5; var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){});
+  };
 
   if(!gamified){
     /* ---- móvil / reduced motion: todo visible, vídeo vivo en bucle ---- */
@@ -39,7 +53,6 @@
     window.scrollTo(0,0);
     window.addEventListener('load',function(){ window.scrollTo(0,0); });
 
-    var inner=document.querySelector('.hero-inner');
     // delta = cuánto bajar el contenido para que el ORBE quede centrado en el 1er vistazo (p=0).
     // Al avanzar el scroll vuelve a 0 → el grupo queda centrado (layout final).
     var delta=0;
@@ -69,6 +82,7 @@
     }
     var lastT=-1;
     function frameGame(){
+      if(chatting) return;            // en modo chat el scroll-intro se detiene
       if(v.readyState>=2){
         var tt=prog*(dur-0.05);
         if(Math.abs(tt-lastT)>0.008){ try{ v.currentTime=tt; }catch(e){} lastT=tt; }

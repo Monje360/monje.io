@@ -71,6 +71,7 @@
     add(data.reply,'bot');
     history.push({role:'assistant',content:strip(data.reply)});
     if(data.offerCall) showCTA();
+    if(turn===0 && window.__monjeEnterChat) window.__monjeEnterChat();   // 1ª respuesta de Monje → modo chat
     stage++; busy=false;
   }
 
