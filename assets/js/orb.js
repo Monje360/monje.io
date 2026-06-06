@@ -89,6 +89,16 @@
   requestAnimationFrame(tickTilt);
 
   /* --- tap en logo u orbe → vuelve al inicio (recarga limpia). El orbe, solo en móvil. --- */
+  /* flecha "Descubrir" → autoscroll que revela todo (la formación + el chat) */
+  var arrow=document.querySelector('.scroll-arrow');
+  if(arrow){
+    arrow.addEventListener('click',function(){
+      if(chatting) return;
+      var top=hero.offsetHeight-window.innerHeight;
+      window.scrollTo({top: top>0?top:window.innerHeight, behavior:'smooth'});
+    });
+  }
+
   function goHome(){ window.location.href='/'; }
   var navLogo=document.querySelector('nav .logo');
   if(navLogo){ navLogo.style.cursor='pointer'; navLogo.addEventListener('click',goHome); }

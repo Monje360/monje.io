@@ -42,7 +42,7 @@
   .hero-top{display:flex;flex-direction:column;align-items:center;width:100%}
   .intro-hint{position:absolute;left:50%;top:calc(50% + 215px);transform:translateX(-50%);z-index:5;pointer-events:none}
   .ihint-copy{font-family:var(--disp);font-weight:600;font-size:clamp(18px,2.4vw,24px);color:var(--black);letter-spacing:-0.01em;display:inline-flex;align-items:center;gap:2px}
-  .scroll-arrow{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:none;background:var(--green);color:#0F0F0F;box-shadow:0 12px 26px -14px rgba(199,255,46,.85);animation:bob 1.6s ease-in-out infinite}
+  .scroll-arrow{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:none;background:var(--green);color:#0F0F0F;box-shadow:0 12px 26px -14px rgba(199,255,46,.85);animation:bob 1.6s ease-in-out infinite;pointer-events:auto;cursor:pointer}
   .scroll-arrow svg{width:18px;height:18px}
   /* ===== Modo chat (tras la 1ª respuesta): orbe pequeño arriba + conversación tipo WhatsApp =====
      Lo activa orb.js añadiendo .chatting a <html>. La página deja de scrollear; el chat scrollea dentro. */
@@ -61,8 +61,12 @@
   html.chatting .presence{margin-bottom:12px}
   html.chatting #chat{flex:1;overflow-y:auto;min-height:0;margin-bottom:12px;padding:2px 2px 0}
   html.chatting .pills{margin-top:12px}
-  /* en modo chat: solo la barra de texto abajo (sin chips ni botones flotantes) */
-  html.chatting .pills{display:none}
+  /* en modo chat: los 4 chips en una fila compacta JUSTO ENCIMA de la barra de texto */
+  html.chatting .pills{display:flex;gap:8px;order:1;max-width:none;margin:0 0 10px;overflow-x:auto}
+  html.chatting .pills .pill{flex:1;min-width:0;align-items:center;justify-content:center;padding:9px 8px;border-radius:30px}
+  html.chatting .pills .pill b{font-size:14px;white-space:nowrap}
+  html.chatting .pills .pill span{display:none}
+  html.chatting .composer{order:2}
   html.chatting .corner-cta{display:none}
   @media(max-width:560px){html.chatting .pin{padding:74px 16px 20px}html.chatting .orb-wrap{width:62px;height:62px;margin-bottom:4px}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
